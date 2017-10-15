@@ -1,0 +1,34 @@
+PODS:
+  - Bolts/Tasks (1.8.4)
+  - Google-Mobile-Ads-SDK (7.24.1)
+  - GSImageViewerController (1.4.0)
+  - NVActivityIndicatorView (4.0.0):
+    - NVActivityIndicatorView/Presenter (= 4.0.0)
+  - NVActivityIndicatorView/Presenter (4.0.0)
+  - Parse (1.15.3):
+    - Bolts/Tasks (~> 1.8)
+  - PopupDialog (0.6.0)
+  - SDWebImage (4.1.1):
+    - SDWebImage/Core (= 4.1.1)
+  - SDWebImage/Core (4.1.1)
+
+DEPENDENCIES:
+  - Google-Mobile-Ads-SDK
+  - GSImageViewerController
+  - NVActivityIndicatorView
+  - Parse
+  - PopupDialog (~> 0.6)
+  - SDWebImage (~> 4.0)
+
+SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  Google-Mobile-Ads-SDK: ed8004a7265b424568dc84f3d2bbe3ea3fff958f
+  GSImageViewerController: 75df64f6b7279e7ec19b1daf5fd01b1ca784055d
+  NVActivityIndicatorView: 54c9b93b6f25a4f467512680c0c90c09a1095cf2
+  Parse: cdc0f1f975ee8be0409e66f21b05df4ae067047c
+  PopupDialog: 687af43af0f7b89948cd411ac701865f931bd6dc
+  SDWebImage: caf91ee75671c95eb7b3073cd90649d25f852a88
+
+PODFILE CHECKSUM: 4cf3c8b7e6649320f70f6e8f12ecdbee42bf9e61
+
+COCOAPODS: 1.2.0
