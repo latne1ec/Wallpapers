@@ -1,6 +1,10 @@
 PODS:
+  - AppLovinSDK (4.3.1)
   - Bolts/Tasks (1.8.4)
   - Google-Mobile-Ads-SDK (7.24.1)
+  - GoogleMobileAdsMediationAppLovin (4.3.1.0):
+    - AppLovinSDK (= 4.3.1)
+    - Google-Mobile-Ads-SDK (>= 7.14.0)
   - GSImageViewerController (1.4.0)
   - NVActivityIndicatorView (4.0.0):
     - NVActivityIndicatorView/Presenter (= 4.0.0)
@@ -11,24 +15,30 @@ PODS:
   - SDWebImage (4.1.1):
     - SDWebImage/Core (= 4.1.1)
   - SDWebImage/Core (4.1.1)
+  - SwiftyStoreKit (0.10.8)
 
 DEPENDENCIES:
   - Google-Mobile-Ads-SDK
+  - GoogleMobileAdsMediationAppLovin
   - GSImageViewerController
   - NVActivityIndicatorView
   - Parse
   - PopupDialog (~> 0.6)
   - SDWebImage (~> 4.0)
+  - SwiftyStoreKit
 
 SPEC CHECKSUMS:
+  AppLovinSDK: 485b91ee21c189bb2dffc3234c9e79d65d816a10
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Google-Mobile-Ads-SDK: ed8004a7265b424568dc84f3d2bbe3ea3fff958f
+  GoogleMobileAdsMediationAppLovin: 80dd55f6d6905ed09a807b69c9970aa4c6fc7062
   GSImageViewerController: 75df64f6b7279e7ec19b1daf5fd01b1ca784055d
   NVActivityIndicatorView: 54c9b93b6f25a4f467512680c0c90c09a1095cf2
   Parse: cdc0f1f975ee8be0409e66f21b05df4ae067047c
   PopupDialog: 687af43af0f7b89948cd411ac701865f931bd6dc
   SDWebImage: caf91ee75671c95eb7b3073cd90649d25f852a88
+  SwiftyStoreKit: 8c193678fabbaafb4430a536497613f89fefd7ec
 
-PODFILE CHECKSUM: 4cf3c8b7e6649320f70f6e8f12ecdbee42bf9e61
+PODFILE CHECKSUM: e98a0c32614c96c6fc29ba94ec02a29ba185fe10
 
 COCOAPODS: 1.2.0

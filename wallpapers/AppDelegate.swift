@@ -9,6 +9,8 @@
 import UIKit
 import Parse
 import GoogleMobileAds
+import SwiftyStoreKit
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,9 +28,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PFUser.enableAutomaticUser()
         PFUser.current()?.incrementKey("runCount")
         PFUser.current()?.saveInBackground()
-                
         
-        AdManager.Instance.loadAd()
+        ALSdk.initializeSdk()
+        ALIncentivizedInterstitialAd.preloadAndNotify(nil)
+        
+        AdManager.Instance.loadRewardedVideoAd()
+        AdManager.Instance.preloadInterstitial()
+        
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+            for purchase in purchases {
+                if purchase.transaction.transactionState == .purchased || purchase.transaction.transactionState == .restored {
+                    if purchase.needsFinishTransaction {
+                        // Deliver content from server, then:
+                        SwiftyStoreKit.finishTransaction(purchase.transaction)
+                    }
+                }
+            }
+        }
         
         return true
     }

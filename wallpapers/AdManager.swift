@@ -9,16 +9,48 @@
 import UIKit
 import GoogleMobileAds
 
-class AdManager: NSObject {
+class AdManager: NSObject, GADInterstitialDelegate {
     
     private static let _instance = AdManager()
     static var Instance: AdManager {
         return _instance
     }
     
-    public func loadAd() {
+    var interstitial: GADInterstitial!
+    var interstitialIsShowing: Bool?
+    
+    
+    // ADMOB
+    public func loadRewardedVideoAd() {
         GADRewardBasedVideoAd.sharedInstance().load(GADRequest(),
-                                                    withAdUnitID: "ca-app-pub-3940256099942544/1712485313")
+                                                    withAdUnitID: "ca-app-pub-2441744724896180/3585488732")
+    }
+    
+    // ADMOB
+    public func preloadInterstitial () {
+        interstitial = createAndLoadInterstitial()
+    }
+    
+    // ADMOB
+    func createAndLoadInterstitial() -> GADInterstitial {
+        interstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        interstitial.delegate = self
+        interstitial.load(GADRequest())
+        return interstitial
+    }
+    
+    // ADMOB
+    func showInterstitial (fromVC: UIViewController) {
+        if interstitial.isReady {
+            interstitial.present(fromRootViewController: fromVC)
+            interstitialIsShowing = true
+        }
+    }
+    
+    // ADMOB
+    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
+        interstitial = createAndLoadInterstitial()
+        interstitialIsShowing = false
     }
     
     public func showAd () {
@@ -56,6 +88,14 @@ class AdManager: NSObject {
     func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
                             didFailToLoadWithError error: Error) {
         print("Reward based video ad failed to load.")
+    }
+    
+    
+    // Applovin
+    func showApplovinAd () {
+        if ALInterstitialAd.isReadyForDisplay() {
+            ALInterstitialAd.show()
+        }
     }
 
     

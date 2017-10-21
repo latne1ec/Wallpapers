@@ -12,4 +12,6 @@ target 'wallpapers' do
   pod 'Google-Mobile-Ads-SDK'
   pod 'PopupDialog', '~> 0.6'
   pod 'NVActivityIndicatorView'
+  pod 'GoogleMobileAdsMediationAppLovin'
+  pod 'SwiftyStoreKit'
 end

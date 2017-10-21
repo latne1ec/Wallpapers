@@ -146,6 +146,18 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         
         self.perform(#selector(addSavebutton), with: nil, afterDelay: 0.2)
         
+        self.perform(#selector(showInterstitial), with: nil, afterDelay: 0.1)
+        
+    }
+    
+    @objc func showInterstitial () {
+        //AdManager.Instance.showInterstitial(fromVC: self)
+        //AdManager.Instance.showApplovinAd()
+//        if ALInterstitialAd.isReadyForDisplay() {
+//            ALInterstitialAd.show()
+//        } else {
+//            print("not ready")
+//        }
     }
     
     @objc func addSavebutton () {
@@ -155,7 +167,7 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         
         downloadButton.setTitle("SAVE WALLPAPER", for: UIControlState.normal)
         downloadButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        downloadButton.setTitleColor(UIColor.darkGray, for: .normal)
+        downloadButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         downloadButton.backgroundColor = UIColor.white
         downloadButton.layer.cornerRadius = 27
         downloadButton.frame = CGRect(x: width/4, y: height+120, width: width/2, height: 54)
@@ -182,14 +194,12 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc func userRequestToSaveImage () {
-        downloadButton.alpha = 0.0
-        
         // Show Popup if not a pro user
         showPopup()
+        //saveImage()
     }
     
     @objc func lowerAlpha () {
-        print("he")
         downloadButton.alpha = 0.7
     }
     @objc func heightenAlpha () {
@@ -210,7 +220,7 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     func showPopup () {
         // Prepare the popup assets
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let popupVC = storyboard.instantiateViewController(withIdentifier: "Popup2") as! PopupViewController
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Popup") as! PopupViewController
         popupVC.popupImage = imageView.image
         popupVC.parentVC = self
         present(popupVC, animated: true, completion: nil)
@@ -249,15 +259,26 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
             let ac = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "OK", style: .default))
             present(ac, animated: true)
+            heightenAlpha()
         } else {
-            let ac = UIAlertController(title: "Saved Wallpaper!", message: "Your wallpaper has been saved to your photos app for use.", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            let ac = UIAlertController(title: "Saved Wallpaper!", message: "Your wallpaper has been saved to your Photos app for use.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                UIAlertAction in
+                ReviewController.Instance.requestReview()
+            }
+            //ac.addAction(UIAlertAction(title: "OK", style: .default))
+            ac.addAction(okAction)
             present(ac, animated: true)
+            heightenAlpha()
         }
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
-        UIApplication.shared.setStatusBarHidden(false, with: UIStatusBarAnimation.fade)
+        if AdManager.Instance.interstitialIsShowing == true {
+            
+        } else {
+            UIApplication.shared.setStatusBarHidden(false, with: UIStatusBarAnimation.fade)
+        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {

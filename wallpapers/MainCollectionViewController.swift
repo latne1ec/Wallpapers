@@ -7,13 +7,17 @@
 //
 
 import UIKit
+import GoogleMobileAds
 import GSImageViewerController
 import Parse
 import SDWebImage
 import NVActivityIndicatorView
+import SwiftyStoreKit
+import StoreKit
+
 private let reuseIdentifier = "Cell"
 
-class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate {
 
     var statusBarView: UIView?
     let imageArray: [String] = ["mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png"]
@@ -21,6 +25,8 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     var refresher:UIRefreshControl!
     var refresherNew: NVActivityIndicatorView!
     var rateButton = UIButton()
+    
+    var bannerView: GADBannerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,32 +37,78 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         
         self.refresher = UIRefreshControl()
         self.collectionView!.alwaysBounceVertical = true
-        self.refresher.tintColor = UIColor.white
+        self.refresher.tintColor = UIColor.lightGray
         self.refresher.addTarget(self, action: #selector(refreshContent), for: .valueChanged)
         self.collectionView!.addSubview(refresher)
         self.collectionView?.backgroundColor = UIColor.black
-        self.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+        self.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 120, right: 0)
         
+        self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Footer");
+        
+        setupMenu()
+        setupBanner()
+    
+    }
+    
+    func setupMenu () {
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        rateButton.setTitle("RATE 😁", for: UIControlState.normal)
-        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        rateButton.setTitleColor(UIColor.darkGray, for: .normal)
+        rateButton.setTitle("PRO", for: UIControlState.normal)
+        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         rateButton.backgroundColor = UIColor.white
-        rateButton.layer.cornerRadius = 26
-        rateButton.frame = CGRect(x: width/2-50, y: height-80, width: 100, height: 54)
+        rateButton.layer.cornerRadius = 28
+        rateButton.frame = CGRect(x: width/2-40, y: height-100, width: 80, height: 54)
+        //rateButton.frame = CGRect(x: width/5, y: height-100, width: 100, height: 54)
         rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         rateButton.layer.shadowOpacity = 1.0
-        rateButton.layer.shadowRadius = 16.0
+        rateButton.layer.shadowRadius = 20.0
         rateButton.layer.shadowOffset = CGSize(width: 0, height: 0)
         self.view.addSubview(rateButton)
         self.view.bringSubview(toFront: rateButton)
         rateButton.addTarget(self, action: #selector(requestReview), for: UIControlEvents.touchUpInside)
         rateButton.addTarget(self, action: #selector(lowerAlpha), for: UIControlEvents.touchDown)
-
-        self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Footer");
-
+        rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
+        
+//        let restorePurchaseButton = UIButton(frame: CGRect(x: self.view.bounds.midX+width/4, y: height - 90, width: 50, height: 50))
+//        restorePurchaseButton.backgroundColor = UIColor.white
+//        restorePurchaseButton.layer.cornerRadius = 26
+//        restorePurchaseButton.addTarget(self, action: #selector(restorePurchaseButtonTapped), for: UIControlEvents.touchUpInside)
+//        self.view.addSubview(restorePurchaseButton)
+    }
+    
+    func setupBanner () {
+        bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
+        bannerView.frame = CGRect(x:0.0,
+                                  y:self.view.frame.size.height - bannerView.frame.size.height,
+                                  width:bannerView.frame.size.width,
+                                  height:bannerView.frame.size.height)
+        bannerView.delegate = self
+        self.view.addSubview(bannerView)
+        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        bannerView.rootViewController = self
+        //initAd()
+    }
+    
+    @objc func initAd () {
+        bannerView.load(GADRequest())
+    }
+    
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        print("adViewDidReceiveAd")
+    }
+    
+    func adView(_ bannerView: GADBannerView,
+                didFailToReceiveAdWithError error: GADRequestError) {
+        print("adView:didFailToReceiveAdWithError: \(error.localizedDescription)")
+        Timer.scheduledTimer(timeInterval: 2, target: self,
+                             selector: #selector(initAd), userInfo: nil, repeats: false)
+    }
+    
+    @objc func heightenAlpha () {
+        rateButton.alpha = 1.0
     }
     
     @objc func lowerAlpha () {
@@ -65,9 +117,29 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     @objc func requestReview () {
         rateButton.alpha = 1.0
-        ReviewController.Instance.requestReview()
+//        let storeProductVC = SKStoreProductViewController()
+//        storeProductVC.delegate = self
+//        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1296651713)])
+//        self.present(storeProductVC, animated: true, completion: nil)
+        
+//        let message = "Check out these 4k wallpapers:"
+//        if let link = NSURL(string: "https://itunes.apple.com/us/app/wallpaper-pro-hd-backgrounds/id1298573221?ls=1&mt=8")
+//        {
+//            let objectsToShare = [message,link] as [Any]
+//            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+//            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+//            self.present(activityVC, animated: true, completion: nil)
+//        }
+        
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
+        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+        present(popupVC, animated: true, completion: nil)
     }
     
+    func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
     
     @objc func refreshContent() {
         if self.localContentArray.count > 0 {
@@ -90,7 +162,16 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     func setupStatusBarBKG () {
         statusBarView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 23))
-        statusBarView?.backgroundColor = UIColor.black//UIColor(white:0.07, alpha:1.0)
+        if UIDevice().userInterfaceIdiom == .phone {
+            switch UIScreen.main.nativeBounds.height {
+            case 2436:
+                print("here")
+                statusBarView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
+            default:
+                print("unknown")
+            }
+        }
+        statusBarView?.backgroundColor = UIColor.black
         view.addSubview(statusBarView!)
         view.bringSubview(toFront: statusBarView!)
     }
@@ -122,6 +203,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
             cell.imageView.alpha = 0
             spinner.stopAnimating()
             spinner.removeFromSuperview()
+            spinner.isHidden = true
             UIView.animate(withDuration: 0.15, animations: {
                 cell.imageView.alpha = 1
             })
