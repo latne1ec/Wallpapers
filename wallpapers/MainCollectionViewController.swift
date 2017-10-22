@@ -41,12 +41,18 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.refresher.addTarget(self, action: #selector(refreshContent), for: .valueChanged)
         self.collectionView!.addSubview(refresher)
         self.collectionView?.backgroundColor = UIColor.black
-        self.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 120, right: 0)
+        self.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 130, right: 0)
         
         self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Footer");
         
         setupMenu()
-        setupBanner()
+        
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+            
+        } else {
+            //setupBanner()
+        }
     
     }
     
@@ -58,8 +64,8 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         rateButton.backgroundColor = UIColor.white
-        rateButton.layer.cornerRadius = 28
-        rateButton.frame = CGRect(x: width/2-40, y: height-100, width: 80, height: 54)
+        rateButton.layer.cornerRadius = 27
+        rateButton.frame = CGRect(x: width/2-40, y: height-120, width: 80, height: 54)
         //rateButton.frame = CGRect(x: width/5, y: height-100, width: 100, height: 54)
         rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         rateButton.layer.shadowOpacity = 1.0
@@ -71,12 +77,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         rateButton.addTarget(self, action: #selector(lowerAlpha), for: UIControlEvents.touchDown)
         rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
-        
-//        let restorePurchaseButton = UIButton(frame: CGRect(x: self.view.bounds.midX+width/4, y: height - 90, width: 50, height: 50))
-//        restorePurchaseButton.backgroundColor = UIColor.white
-//        restorePurchaseButton.layer.cornerRadius = 26
-//        restorePurchaseButton.addTarget(self, action: #selector(restorePurchaseButtonTapped), for: UIControlEvents.touchUpInside)
-//        self.view.addSubview(restorePurchaseButton)
+    
     }
     
     func setupBanner () {
@@ -89,7 +90,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.view.addSubview(bannerView)
         bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
         bannerView.rootViewController = self
-        //initAd()
+        initAd()
     }
     
     @objc func initAd () {
@@ -165,7 +166,6 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {
             case 2436:
-                print("here")
                 statusBarView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
             default:
                 print("unknown")
@@ -236,7 +236,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         label.textAlignment = .center
         label.textColor = UIColor.lightGray
         label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.text = "New wallpapers added every day.\nSee you tomorrow ✌🏼"
+        label.text = "New wallpapers every day.\nSee you tomorrow ✌🏼"
         label.numberOfLines = 2
         label.alpha = 0.0
         footerView.addSubview(label)

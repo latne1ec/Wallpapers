@@ -55,16 +55,13 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.view.layer.cornerRadius = 10
         self.bkgView.layer.cornerRadius = 11
         self.bkgView.clipsToBounds = true
         self.bkgView.layer.masksToBounds = true
         self.bkgView.backgroundColor = UIColor.white
         self.popupImageView.image = popupImage
         self.popupImageView.clipsToBounds = true
-//        fourLabel.layer.cornerRadius = 4
-//        fourLabel.layer.masksToBounds = true
-        
+    
         interstitial = createAndLoadInterstitial()
         
     }
@@ -127,17 +124,33 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
             results in
             loader.dismiss()
             if results.restoreFailedPurchases.count > 0 {
-                print("Restore Failed: \(results.restoreFailedPurchases)")
+                let ac = UIAlertController(title: "Error", message: "An unknown error occured", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
             }
             else if results.restoredPurchases.count > 0 {
-                print("Restore Success: \(results.restoredPurchases)")
+                // RESTORE SUCCESS
+                let ac = UIAlertController(title: "Purchases Restored", message: "Your purchase has been successfully restored!", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
+                User.Instance.setUserAsProMember()
+                User.Instance.checkIfProMember()
             }
             else {
-                print("Nothing to Restore")
+                let ac = UIAlertController(title: "Error", message: "No purchases to restore", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
             }
         })
     }
     
+    @IBAction func helpTapped(_ sender: UIButton) {
+        
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Help")
+        present(popupVC, animated: true, completion: nil)
+        
+    }
     func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
                             didRewardUserWith reward: GADAdReward) {
         // USER FINISHED VIDEO
@@ -252,17 +265,24 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
         NetworkActivityIndicatorManager.NetworkOperationStarted()
         SwiftyStoreKit.purchaseProduct(bundleId + "." + purchase.rawValue, completion: {
             result in
+            switch result {
+            case .success:
+                User.Instance.setUserAsProMember()
+                let ac = UIAlertController(title: "Success!", message: "You are now a Pro Member, welcome to the club! Enjoy unlimited Premium Wallpapers and an Ad Free Experience.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                    UIAlertAction in
+                    self.perform(#selector(self.closePopup), with: nil, afterDelay: 0.25)
+                }
+                ac.addAction(okAction)
+                self.present(ac, animated: true)
+            case .error:
+                let ac = UIAlertController(title: "Error", message: "An error occured while attempting to complete your purchase. Please try again.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
+            }
             NetworkActivityIndicatorManager.NetworkOperationFinished()
             loader.dismiss()
             loader.removeFromSuperview()
-        })
-    }
-    
-    func restorePurchases () {
-        NetworkActivityIndicatorManager.NetworkOperationStarted()
-        SwiftyStoreKit.restorePurchases(atomically: true, completion: {
-            result in
-            NetworkActivityIndicatorManager.NetworkOperationFinished()
         })
     }
     
@@ -274,17 +294,4 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
             NetworkActivityIndicatorManager.NetworkOperationFinished()
         })
     }
-    
-    func verifyPurchase () {
-        NetworkActivityIndicatorManager.NetworkOperationStarted()
-        let appleValidator = AppleReceiptValidator(service: .production)
-        SwiftyStoreKit.verifyReceipt(using: appleValidator, password: sharedSecret, forceRefresh: true, completion: {
-            result in
-            NetworkActivityIndicatorManager.NetworkOperationFinished()
-        })
-    }
-    
-    
-    
-    
 }

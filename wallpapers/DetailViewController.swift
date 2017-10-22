@@ -194,9 +194,14 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc func userRequestToSaveImage () {
+        //User.Instance.checkIfProMember()
         // Show Popup if not a pro user
-        showPopup()
-        //saveImage()
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+            saveImage()
+        } else {
+            showPopup()
+        }
     }
     
     @objc func lowerAlpha () {

@@ -21,19 +21,29 @@ class User: NSObject {
     var proMember: Bool?
     
     func setUserAsProMember () {
+        
         UserDefaults.standard.set(true, forKey: "promember")
         UserDefaults.standard.synchronize()
+        
+        if PFUser.current() != nil {
+            PFUser.current()?.setObject(true, forKey: "promember")
+            PFUser.current()?.saveInBackground()
+        }
     }
     
     func disableProMembership () {
         UserDefaults.standard.set(false, forKey: "promember")
         UserDefaults.standard.synchronize()
+        if PFUser.current() != nil {
+            PFUser.current()?.setObject(false, forKey: "promember")
+            PFUser.current()?.saveInBackground()
+        }
     }
     
     func checkIfProMember ()  {
         
         let appleValidator = AppleReceiptValidator(service: .production)
-        SwiftyStoreKit.verifyReceipt(using: appleValidator, password: sharedSecret, forceRefresh: true, completion: {
+        SwiftyStoreKit.verifyReceipt(using: appleValidator, password: sharedSecret, forceRefresh: false, completion: {
             result in
             switch result {
             case .success(let receipt):
@@ -42,14 +52,18 @@ class User: NSObject {
                     type: .autoRenewable, // or .nonRenewing (see below)
                     productId: "com.teamlevellabs.wallpapers.promembership",
                     inReceipt: receipt)
+                print(purchaseResult)
                 
                 switch purchaseResult {
                 case .purchased:
-                    self.proMember = true
+                    print("purchased")
+                    self.setUserAsProMember()
                 case .expired:
-                    self.proMember = false
+                    print("expired")
+                    self.disableProMembership()
                 case .notPurchased:
-                    self.proMember = false
+                    self.disableProMembership()
+                    print("NOT purchased")
                 }
                 
             case .error(let error):
@@ -57,5 +71,4 @@ class User: NSObject {
             }
         })
     }
-
 }

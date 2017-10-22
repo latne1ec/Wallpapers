@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AdManager.Instance.preloadInterstitial()
         
         SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+            print(purchases)
             for purchase in purchases {
                 if purchase.transaction.transactionState == .purchased || purchase.transaction.transactionState == .restored {
                     if purchase.needsFinishTransaction {
@@ -45,6 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
+        
+        User.Instance.checkIfProMember()
         
         return true
     }
