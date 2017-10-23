@@ -17,7 +17,7 @@ import StoreKit
 
 private let reuseIdentifier = "Cell"
 
-class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate {
+class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate {
 
     var statusBarView: UIView?
     let imageArray: [String] = ["mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png"]
@@ -53,7 +53,17 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         } else {
             //setupBanner()
         }
+        User.Instance.delegate = self
+    }
     
+    func enableBanner() {
+        setupBanner()
+    }
+    
+    func removeBanner () {
+        if bannerView != nil {
+            bannerView.isHidden = true
+        }
     }
     
     func setupMenu () {
@@ -65,7 +75,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         rateButton.backgroundColor = UIColor.white
         rateButton.layer.cornerRadius = 27
-        rateButton.frame = CGRect(x: width/2-40, y: height-120, width: 80, height: 54)
+        rateButton.frame = CGRect(x: width/2-40, y: height-114, width: 80, height: 54)
         //rateButton.frame = CGRect(x: width/5, y: height-100, width: 100, height: 54)
         rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         rateButton.layer.shadowOpacity = 1.0
@@ -88,7 +98,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                                   height:bannerView.frame.size.height)
         bannerView.delegate = self
         self.view.addSubview(bannerView)
-        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        bannerView.adUnitID = "ca-app-pub-2441744724896180/1511033317"
         bannerView.rootViewController = self
         initAd()
     }
@@ -135,6 +145,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
         popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+        popupVC.homeVC = self
         present(popupVC, animated: true, completion: nil)
     }
     

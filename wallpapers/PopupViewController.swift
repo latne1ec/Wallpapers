@@ -48,6 +48,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
     @IBOutlet weak var popupImageView: UIImageView!
     public var popupImage: UIImage?
     public var parentVC: DetailViewController?
+    public var homeVC: MainCollectionViewController?
     var userFinishedVideo: Bool = false
     var interstitial: GADInterstitial!
     
@@ -96,21 +97,45 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
     }
     
     @IBAction func buttonTwoTapped(_ sender: Any) {
-    
-        GADRewardBasedVideoAd.sharedInstance().delegate = self
-        if GADRewardBasedVideoAd.sharedInstance().isReady == true {
-            GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
-        } else if ALIncentivizedInterstitialAd.isReadyForDisplay() {
-            ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
-            ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
-            ALIncentivizedInterstitialAd.showAndNotify(self)
-        } else if interstitial.isReady {
-            interstitial.present(fromRootViewController: self)
+        
+        let random = Int(arc4random_uniform(4))
+        
+        if random % 2 == 0 {
+            // Prioritize ADMOB
+            if GADRewardBasedVideoAd.sharedInstance().isReady == true {
+                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
+            } else if ALIncentivizedInterstitialAd.isReadyForDisplay() {
+                ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
+                ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
+                ALIncentivizedInterstitialAd.showAndNotify(self)
+            } else if interstitial.isReady {
+                interstitial.present(fromRootViewController: self)
+            } else {
+                print("Interstital or Video Not ready")
+                dismiss(animated: true, completion: nil)
+                parentVC?.saveImage()
+                parentVC?.heightenAlpha()
+            }
+
         } else {
-            print("Interstital or Video Not ready")
-            dismiss(animated: true, completion: nil)
-            parentVC?.saveImage()
-            parentVC?.heightenAlpha()
+            // Prioritize APPLOVIN
+            if ALIncentivizedInterstitialAd.isReadyForDisplay() {
+                ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
+                ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
+                ALIncentivizedInterstitialAd.showAndNotify(self)
+            } else if ALInterstitialAd.isReadyForDisplay() {
+                ALInterstitialAd.shared().adDisplayDelegate = self
+                ALInterstitialAd.show()
+            } else if interstitial.isReady {
+                interstitial.present(fromRootViewController: self)
+            } else if GADRewardBasedVideoAd.sharedInstance().isReady == true {
+                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
+            } else {
+                print("Interstital or Video Not ready")
+                dismiss(animated: true, completion: nil)
+                parentVC?.saveImage()
+                parentVC?.heightenAlpha()
+            }
         }
     }
     
@@ -271,6 +296,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
                 let ac = UIAlertController(title: "Success!", message: "You are now a Pro Member, welcome to the club! Enjoy unlimited Premium Wallpapers and an Ad Free Experience.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
                     UIAlertAction in
+                    self.homeVC?.removeBanner()
                     self.perform(#selector(self.closePopup), with: nil, afterDelay: 0.25)
                 }
                 ac.addAction(okAction)

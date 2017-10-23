@@ -17,6 +17,7 @@
 		20494B2A1F92698A009D2980 /* close2.png in Resources */ = {isa = PBXBuildFile; fileRef = 20494B291F926985009D2980 /* close2.png */; };
 		204C2B651F91874C0032904F /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C2B641F91874C0032904F /* AdManager.swift */; };
 		204C2B671F9189B60032904F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C2B661F9189B60032904F /* DetailViewController.swift */; };
+		205BA2671F9D510700035BE6 /* SwiftyReceiptValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205BA2661F9D510700035BE6 /* SwiftyReceiptValidator.swift */; };
 		208BA51E1F8EA8DB00C955E1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208BA51D1F8EA8DB00C955E1 /* DataManager.swift */; };
 		208BA5201F8EB09A00C955E1 /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 208BA51F1F8EB09800C955E1 /* green.png */; };
 		2094B0681F9A537A0031145C /* button1.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2094B0671F9A53780031145C /* button1.1.png */; };
@@ -56,6 +57,7 @@
 		20494B291F926985009D2980 /* close2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close2.png; sourceTree = "<group>"; };
 		204C2B641F91874C0032904F /* AdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdManager.swift; sourceTree = "<group>"; };
 		204C2B661F9189B60032904F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		205BA2661F9D510700035BE6 /* SwiftyReceiptValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyReceiptValidator.swift; sourceTree = "<group>"; };
 		208BA51D1F8EA8DB00C955E1 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		208BA51F1F8EB09800C955E1 /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
 		2094B0671F9A53780031145C /* button1.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button1.1.png; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				20F87B301F8E53DA007E2B8B /* AppDelegate.swift */,
+				205BA2661F9D510700035BE6 /* SwiftyReceiptValidator.swift */,
 				20F87B341F8E53DA007E2B8B /* Main.storyboard */,
 				202960231F9ABE38007E1FD2 /* User.swift */,
 				208BA51D1F8EA8DB00C955E1 /* DataManager.swift */,
@@ -340,6 +343,7 @@
 				20A612951F94268E005EDE3A /* AppLovinCustomEventInterstitial.m in Sources */,
 				20ED29D41F9CD80C0065BA56 /* HelpViewController.swift in Sources */,
 				202960201F9AB545007E1FD2 /* LoadingView.swift in Sources */,
+				205BA2671F9D510700035BE6 /* SwiftyReceiptValidator.swift in Sources */,
 				208BA51E1F8EA8DB00C955E1 /* DataManager.swift in Sources */,
 				20F87B451F8E5998007E2B8B /* MainCollectionViewCell.swift in Sources */,
 				20B7DA2C1F93CED000990DA4 /* ReviewController.swift in Sources */,

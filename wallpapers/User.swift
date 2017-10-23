@@ -11,7 +11,13 @@ import Parse
 import SwiftyStoreKit
 import StoreKit
 
+protocol UserDelegate {
+    func enableBanner()
+}
+
 class User: NSObject {
+    
+    var delegate: UserDelegate?
     
     private static let _instance = User()
     static var Instance: User {
@@ -42,33 +48,42 @@ class User: NSObject {
     
     func checkIfProMember ()  {
         
-        let appleValidator = AppleReceiptValidator(service: .production)
-        SwiftyStoreKit.verifyReceipt(using: appleValidator, password: sharedSecret, forceRefresh: false, completion: {
-            result in
-            switch result {
-            case .success(let receipt):
-                // Verify the purchase of a Subscription
-                let purchaseResult = SwiftyStoreKit.verifySubscription(
-                    type: .autoRenewable, // or .nonRenewing (see below)
-                    productId: "com.teamlevellabs.wallpapers.promembership",
-                    inReceipt: receipt)
-                print(purchaseResult)
-                
-                switch purchaseResult {
-                case .purchased:
-                    print("purchased")
-                    self.setUserAsProMember()
-                case .expired:
-                    print("expired")
-                    self.disableProMembership()
-                case .notPurchased:
-                    self.disableProMembership()
-                    print("NOT purchased")
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+            
+            let appleValidator = AppleReceiptValidator(service: .production)
+            SwiftyStoreKit.verifyReceipt(using: appleValidator, password: sharedSecret, forceRefresh: false, completion: {
+                result in
+                switch result {
+                case .success(let receipt):
+                    // Verify the purchase of a Subscription
+                    let purchaseResult = SwiftyStoreKit.verifySubscription(
+                        type: .autoRenewable, // or .nonRenewing (see below)
+                        productId: "com.teamlevellabs.wallpapers.promembership",
+                        inReceipt: receipt)
+                    print(purchaseResult)
+                    
+                    switch purchaseResult {
+                    case .purchased:
+                        print("purchased")
+                        self.setUserAsProMember()
+                    case .expired:
+                        self.delegate?.enableBanner()
+                        print("expired")
+                        self.disableProMembership()
+                    case .notPurchased:
+                        self.disableProMembership()
+                        print("NOT purchased")
+                    }
+                    
+                case .error(let error):
+                    print("Receipt verification failed: \(error)")
                 }
-                
-            case .error(let error):
-                print("Receipt verification failed: \(error)")
-            }
-        })
+            })
+            
+        } else {
+            
+        }
+        
     }
 }

@@ -631,7 +631,7 @@
                                     </fragment>
                                     <fragment>
                                         <mutableString key="content">
-  •  You can subscribe to a weekly plan that comes with a free 3 day trial ($5.99 after the free trial expires)
+  •  You can subscribe to a weekly plan that comes with a free 3 day trial ($8.99 after the free trial expires)
   •  The payment will be charged to your iTunes Account at confirmation of purchase
   •  Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period
   •  Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal
@@ -739,7 +739,7 @@
                                     </fragment>
                                     <fragment>
                                         <string key="content">
-Weekly free trial automatically converts to a paid weekly subscription (at $5.99) unless auto-renew is turned off at least 24-hours before the end of the trial period. From that point onwards, subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.
+Weekly free trial automatically converts to a paid weekly subscription (at $8.99) unless auto-renew is turned off at least 24-hours before the end of the trial period. From that point onwards, subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.
 
 </string>
                                         <attributes>
