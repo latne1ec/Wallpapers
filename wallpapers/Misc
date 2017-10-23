@@ -1,0 +1,14 @@
+
+//        let storeProductVC = SKStoreProductViewController()
+//        storeProductVC.delegate = self
+//        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1296651713)])
+//        self.present(storeProductVC, animated: true, completion: nil)
+
+//        let message = "Check out these 4k wallpapers:"
+//        if let link = NSURL(string: "https://itunes.apple.com/us/app/wallpaper-pro-hd-backgrounds/id1298573221?ls=1&mt=8")
+//        {
+//            let objectsToShare = [message,link] as [Any]
+//            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+//            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+//            self.present(activityVC, animated: true, completion: nil)
+//        }

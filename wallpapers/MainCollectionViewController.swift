@@ -51,7 +51,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         if userIsProMember == true {
             
         } else {
-            //setupBanner()
+            setupBanner()
         }
         User.Instance.delegate = self
     }
@@ -76,7 +76,6 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         rateButton.backgroundColor = UIColor.white
         rateButton.layer.cornerRadius = 27
         rateButton.frame = CGRect(x: width/2-40, y: height-114, width: 80, height: 54)
-        //rateButton.frame = CGRect(x: width/5, y: height-100, width: 100, height: 54)
         rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         rateButton.layer.shadowOpacity = 1.0
         rateButton.layer.shadowRadius = 20.0
@@ -127,21 +126,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     @objc func requestReview () {
-        rateButton.alpha = 1.0
-//        let storeProductVC = SKStoreProductViewController()
-//        storeProductVC.delegate = self
-//        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1296651713)])
-//        self.present(storeProductVC, animated: true, completion: nil)
-        
-//        let message = "Check out these 4k wallpapers:"
-//        if let link = NSURL(string: "https://itunes.apple.com/us/app/wallpaper-pro-hd-backgrounds/id1298573221?ls=1&mt=8")
-//        {
-//            let objectsToShare = [message,link] as [Any]
-//            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-//            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
-//            self.present(activityVC, animated: true, completion: nil)
-//        }
-        
+        rateButton.alpha = 1.0        
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
         popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")

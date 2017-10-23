@@ -123,9 +123,6 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
                 ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
                 ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
                 ALIncentivizedInterstitialAd.showAndNotify(self)
-            } else if ALInterstitialAd.isReadyForDisplay() {
-                ALInterstitialAd.shared().adDisplayDelegate = self
-                ALInterstitialAd.show()
             } else if interstitial.isReady {
                 interstitial.present(fromRootViewController: self)
             } else if GADRewardBasedVideoAd.sharedInstance().isReady == true {
