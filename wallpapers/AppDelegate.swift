@@ -46,7 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
-        
         User.Instance.checkIfProMember()
         
         return true

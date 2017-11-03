@@ -503,7 +503,7 @@
 				INFOPLIST_FILE = wallpapers/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.teamlevellabs.wallpapers;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamlevellabs.hdwallpapers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "wallpapers/wallpapers-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -527,7 +527,7 @@
 				INFOPLIST_FILE = wallpapers/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.teamlevellabs.wallpapers;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamlevellabs.hdwallpapers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "wallpapers/wallpapers-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;

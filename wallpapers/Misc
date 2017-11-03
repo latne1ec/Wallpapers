@@ -4,7 +4,7 @@
 //        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1296651713)])
 //        self.present(storeProductVC, animated: true, completion: nil)
 
-//        let message = "Check out these 4k wallpapers:"
+//        let message = "Check out these HD wallpapers:"
 //        if let link = NSURL(string: "https://itunes.apple.com/us/app/wallpaper-pro-hd-backgrounds/id1298573221?ls=1&mt=8")
 //        {
 //            let objectsToShare = [message,link] as [Any]

@@ -51,7 +51,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         if userIsProMember == true {
             
         } else {
-            setupBanner()
+            //setupBanner()
         }
         User.Instance.delegate = self
     }
@@ -127,11 +127,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     @objc func requestReview () {
         rateButton.alpha = 1.0        
-        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
-        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
-        popupVC.homeVC = self
-        present(popupVC, animated: true, completion: nil)
+//        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
+//        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+//        popupVC.homeVC = self
+//        present(popupVC, animated: true, completion: nil)
     }
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
@@ -139,9 +139,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     @objc func refreshContent() {
-        if self.localContentArray.count > 0 {
-            self.localContentArray.removeAllObjects()
-        }
+        
         self.retrieveContent()
     }
     
@@ -191,21 +189,23 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let spinner = NVActivityIndicatorView(frame: spinnerFrame, type: NVActivityIndicatorType.ballScale, color: UIColor.lightGray, padding:nil)
         spinner.startAnimating()
         cell.addSubview(spinner)
-        let object = self.localContentArray[indexPath.row] as! PFObject
-        let imageFile = object["contentFile"] as! PFFile
-        let imageUrl = imageFile.url
-        let url = URL(string: imageUrl!)
-        cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: []) { (image, error, cacheType, url) in
-            cell.imageView.alpha = 0
-            spinner.stopAnimating()
-            spinner.removeFromSuperview()
-            spinner.isHidden = true
-            UIView.animate(withDuration: 0.15, animations: {
-                cell.imageView.alpha = 1
-            })
+        if let object = self.localContentArray[indexPath.row] as? PFObject {
+            let imageFile = object["contentFile"] as! PFFile
+            let imageUrl = imageFile.url
+            let url = URL(string: imageUrl!)
+            cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: []) { (image, error, cacheType, url) in
+                cell.imageView.alpha = 0
+                spinner.stopAnimating()
+                spinner.removeFromSuperview()
+                spinner.isHidden = true
+                UIView.animate(withDuration: 0.15, animations: {
+                    
+                    cell.imageView.alpha = 1
+                })
+            }
+            cell.imageView.layer.cornerRadius = 6
+            cell.imageView.layer.masksToBounds = true
         }
-        cell.imageView.layer.cornerRadius = 6
-        cell.imageView.layer.masksToBounds = true
         
         return cell
     }
@@ -252,6 +252,9 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         query.findObjectsInBackground {
             (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
+                if self.localContentArray.count > 0 {
+                    self.localContentArray.removeAllObjects()
+                }
                 if let objects = objects {
                     for object in objects {
                         self.localContentArray.add(object)

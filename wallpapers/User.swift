@@ -59,10 +59,9 @@ class User: NSObject {
                     // Verify the purchase of a Subscription
                     let purchaseResult = SwiftyStoreKit.verifySubscription(
                         type: .autoRenewable, // or .nonRenewing (see below)
-                        productId: "com.teamlevellabs.wallpapers.promembership",
+                        productId: "com.teamlevellabs.wallpapers.promembershipweekly",
                         inReceipt: receipt)
-                    print(purchaseResult)
-                    
+            
                     switch purchaseResult {
                     case .purchased:
                         print("purchased")
@@ -76,6 +75,40 @@ class User: NSObject {
                         print("NOT purchased")
                     }
                     
+//                    let purchaseResult2 = SwiftyStoreKit.verifySubscription(
+//                        type: .autoRenewable, // or .nonRenewing (see below)
+//                        productId: "com.teamlevellabs.wallpapers.promembershipmonthly",
+//                        inReceipt: receipt)
+//                    switch purchaseResult2 {
+//                    case .purchased:
+//                        print("purchased")
+//                        self.setUserAsProMember()
+//                    case .expired:
+//                        self.delegate?.enableBanner()
+//                        print("expired")
+//                        self.disableProMembership()
+//                    case .notPurchased:
+//                        self.disableProMembership()
+//                        print("NOT purchased")
+//                    }
+//
+//                    let purchaseResult3 = SwiftyStoreKit.verifySubscription(
+//                        type: .autoRenewable, // or .nonRenewing (see below)
+//                        productId: "com.teamlevellabs.wallpapers.promembershipyearly",
+//                        inReceipt: receipt)
+//                    switch purchaseResult3 {
+//                    case .purchased:
+//                        print("purchased")
+//                        self.setUserAsProMember()
+//                    case .expired:
+//                        self.delegate?.enableBanner()
+//                        print("expired")
+//                        self.disableProMembership()
+//                    case .notPurchased:
+//                        self.disableProMembership()
+//                        print("NOT purchased")
+//                    }
+                    
                 case .error(let error):
                     print("Receipt verification failed: \(error)")
                 }
@@ -84,6 +117,5 @@ class User: NSObject {
         } else {
             
         }
-        
     }
 }

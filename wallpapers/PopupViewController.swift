@@ -15,7 +15,7 @@ import StoreKit
 var sharedSecret = "e1cff994993d43718a641288122d06bc"
 
 enum RegisteredPurchase: String {
-    case ProMembership = "promembership"
+    case ProMembership = "promembershipweekly"
 }
 
 class NetworkActivityIndicatorManager: NSObject {
@@ -167,7 +167,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
     }
     
     @IBAction func helpTapped(_ sender: UIButton) {
-        
+        print("hi")
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Help")
         present(popupVC, animated: true, completion: nil)
@@ -287,10 +287,11 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
         NetworkActivityIndicatorManager.NetworkOperationStarted()
         SwiftyStoreKit.purchaseProduct(bundleId + "." + purchase.rawValue, completion: {
             result in
+            print(result)
             switch result {
             case .success:
                 User.Instance.setUserAsProMember()
-                let ac = UIAlertController(title: "Success!", message: "You are now a Pro Member, welcome to the club! Enjoy unlimited Premium Wallpapers and an Ad Free Experience.", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Success!", message: "You are now a Pro Member, welcome to the club! Enjoy HD Wallpapers plus an Ad Free Experience for as long as your subscription is active.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
                     UIAlertAction in
                     self.homeVC?.removeBanner()
