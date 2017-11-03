@@ -9,6 +9,7 @@
 import UIKit
 import GoogleMobileAds
 import PopupDialog
+import Parse
 
 public struct GSImageInfo {
     
@@ -89,6 +90,7 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     
     var statusBarHidden: Bool?
     var downloadButton = UIButton()
+    var interstitial: GADInterstitial!
     
     fileprivate let imageView  = UIImageView()
     fileprivate let scrollView = UIScrollView()
@@ -151,13 +153,23 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc func showInterstitial () {
-        //AdManager.Instance.showInterstitial(fromVC: self)
-        //AdManager.Instance.showApplovinAd()
-//        if ALInterstitialAd.isReadyForDisplay() {
-//            ALInterstitialAd.show()
-//        } else {
-//            print("not ready")
-//        }
+        
+        if AdManager.Instance.monetizationEnabled == false {
+            return
+        }
+        if AdManager.Instance.shouldShowAd == false {
+            AdManager.Instance.shouldShowAd = true
+        } else {
+            print("should show ad")
+            AdManager.Instance.shouldShowAd = false
+            if AdManager.Instance.interstitial.isReady {
+                AdManager.Instance.showAdmobInterstitial(fromVC: self)
+            } else if ALInterstitialAd.isReadyForDisplay() {
+                AdManager.Instance.showApplovinAd()
+            } else {
+                // No Ad
+            }
+        }
     }
     
     @objc func addSavebutton () {
@@ -188,20 +200,12 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
             UIView.animate(withDuration: 0.15, animations: {
                 self.downloadButton.frame = CGRect(x: width/4, y: self.view.frame.size.height - 100, width: self.downloadButton.frame.size.width, height: 54)
             }) { (success) in
-                
             }
         }
     }
     
     @objc func userRequestToSaveImage () {
-        //User.Instance.checkIfProMember()
-        // Show Popup if not a pro user
-        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
-        if userIsProMember == true {
-            saveImage()
-        } else {
-            showPopup()
-        }
+        saveImage()
     }
     
     @objc func lowerAlpha () {
@@ -231,37 +235,11 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         present(popupVC, animated: true, completion: nil)
     }
     
-    
-    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        let size = image.size
-        
-        let widthRatio  = targetSize.width  / image.size.width
-        let heightRatio = targetSize.height / image.size.height
-        
-        // Figure out what our orientation is, and use that to form the rectangle
-        var newSize: CGSize
-        if(widthRatio > heightRatio) {
-            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
-        } else {
-            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
-        }
-        
-        // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        
-        // Actually do the resizing to the rect using the ImageContext stuff
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        image.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage!
-    }
-    
     @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
         if let error = error {
             // we got back an error!
-            let ac = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            print(error)
+            let ac = UIAlertController(title: "Error", message: "This app needs access to your photo library to save wallpapers to your camera roll for use. To enable this, please go to: Settings > Wallpapers > Photos > Add Photos Only", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "OK", style: .default))
             present(ac, animated: true)
             heightenAlpha()
@@ -330,7 +308,6 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         double.numberOfTapsRequired = 2
         single.require(toFail: double)
         scrollView.addGestureRecognizer(single)
-        //scrollView.addGestureRecognizer(double)
         
         if transitionInfo?.canSwipe == true {
             let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
@@ -550,13 +527,29 @@ class GSImageViewerTransition: NSObject, UIViewControllerAnimatedTransitioning {
 extension DetailViewController: UIGestureRecognizerDelegate {
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+        if gestureRecognizer is UIPanGestureRecognizer {
             if scrollView.zoomScale != 1.0 {
                 return false
             }
         }
         return true
     }
-    
+}
+
+extension UIImage {
+    func resized(withPercentage percentage: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    func resized(toWidth width: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
 }
 

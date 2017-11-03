@@ -173,6 +173,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
         present(popupVC, animated: true, completion: nil)
         
     }
+    
     func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
                             didRewardUserWith reward: GADAdReward) {
         // USER FINISHED VIDEO
@@ -193,7 +194,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
             ac.addAction(UIAlertAction(title: "OK", style: .default))
             present(ac, animated: true)
         }
-        AdManager.Instance.loadRewardedVideoAd()
+        //AdManager.Instance.loadRewardedVideoAd()
     }
     
     

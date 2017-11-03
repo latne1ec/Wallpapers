@@ -30,23 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PFUser.current()?.saveInBackground()
         
         ALSdk.initializeSdk()
-        ALIncentivizedInterstitialAd.preloadAndNotify(nil)
-        
-        AdManager.Instance.loadRewardedVideoAd()
+        AdManager.Instance.detectIfMonetizationEnabled()
         AdManager.Instance.preloadInterstitial()
-        
-        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
-            print(purchases)
-            for purchase in purchases {
-                if purchase.transaction.transactionState == .purchased || purchase.transaction.transactionState == .restored {
-                    if purchase.needsFinishTransaction {
-                        // Deliver content from server, then:
-                        SwiftyStoreKit.finishTransaction(purchase.transaction)
-                    }
-                }
-            }
-        }
-        User.Instance.checkIfProMember()
+        AdManager.Instance.shouldShowAd = false
         
         return true
     }

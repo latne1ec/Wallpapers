@@ -17,15 +17,13 @@ import StoreKit
 
 private let reuseIdentifier = "Cell"
 
-class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate {
+class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate, AdManagerDelegate {
 
     var statusBarView: UIView?
-    let imageArray: [String] = ["mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png","mango2.png"]
     var localContentArray = NSMutableArray()
     var refresher:UIRefreshControl!
     var refresherNew: NVActivityIndicatorView!
     var rateButton = UIButton()
-    
     var bannerView: GADBannerView!
     
     override func viewDidLoad() {
@@ -46,14 +44,22 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Footer");
         
         setupMenu()
-        
-        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
-        if userIsProMember == true {
-            
-        } else {
-            //setupBanner()
-        }
+        //setupBanner()
         User.Instance.delegate = self
+        AdManager.Instance.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        checkInternetConnection()
+    }
+    
+    func checkInternetConnection () {
+        if Reachability.isConnectedToNetwork(){
+        } else {
+            let ac = UIAlertController(title: "No Internet Connection", message: "An internet connection is required to use this app. Please connect to the internet and try again.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
     }
     
     func enableBanner() {
@@ -70,12 +76,12 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        rateButton.setTitle("PRO", for: UIControlState.normal)
-        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        rateButton.setTitle("RATE US 😁", for: UIControlState.normal)
+        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         rateButton.backgroundColor = UIColor.white
-        rateButton.layer.cornerRadius = 27
-        rateButton.frame = CGRect(x: width/2-40, y: height-114, width: 80, height: 54)
+        rateButton.layer.cornerRadius = 26
+        rateButton.frame = CGRect(x: width/2-60, y: height-114, width: 120, height: 54)
         rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         rateButton.layer.shadowOpacity = 1.0
         rateButton.layer.shadowRadius = 20.0
@@ -90,6 +96,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     func setupBanner () {
+        
         bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
         bannerView.frame = CGRect(x:0.0,
                                   y:self.view.frame.size.height - bannerView.frame.size.height,
@@ -100,6 +107,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         bannerView.adUnitID = "ca-app-pub-2441744724896180/1511033317"
         bannerView.rootViewController = self
         initAd()
+        
     }
     
     @objc func initAd () {
@@ -126,12 +134,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     @objc func requestReview () {
-        rateButton.alpha = 1.0        
-//        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
-//        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
-//        popupVC.homeVC = self
-//        present(popupVC, animated: true, completion: nil)
+        rateButton.alpha = 1.0
+        let storeProductVC = SKStoreProductViewController()
+        storeProductVC.delegate = self
+        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
+        self.present(storeProductVC, animated: true, completion: nil)
     }
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
@@ -162,7 +169,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
             case 2436:
                 statusBarView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
             default:
-                print("unknown")
+                break
             }
         }
         statusBarView?.backgroundColor = UIColor.black
@@ -189,23 +196,26 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let spinner = NVActivityIndicatorView(frame: spinnerFrame, type: NVActivityIndicatorType.ballScale, color: UIColor.lightGray, padding:nil)
         spinner.startAnimating()
         cell.addSubview(spinner)
-        if let object = self.localContentArray[indexPath.row] as? PFObject {
-            let imageFile = object["contentFile"] as! PFFile
-            let imageUrl = imageFile.url
-            let url = URL(string: imageUrl!)
-            cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: []) { (image, error, cacheType, url) in
-                cell.imageView.alpha = 0
+        let object = self.localContentArray[indexPath.row] as? PFObject
+        let imageFile = object!["contentFile"] as! PFFile
+        let imageUrl = imageFile.url
+        let url = URL(string: imageUrl!)
+        cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
+            // Perform operation.
+            cell.imageView.alpha = 0
+            spinner.stopAnimating()
+            spinner.removeFromSuperview()
+            spinner.isHidden = true
+            UIView.animate(withDuration: 0.15, animations: {
                 spinner.stopAnimating()
                 spinner.removeFromSuperview()
                 spinner.isHidden = true
-                UIView.animate(withDuration: 0.15, animations: {
-                    
-                    cell.imageView.alpha = 1
-                })
-            }
-            cell.imageView.layer.cornerRadius = 6
-            cell.imageView.layer.masksToBounds = true
-        }
+                cell.imageView.alpha = 1
+            })
+        })
+        
+        cell.imageView.layer.cornerRadius = 6
+        cell.imageView.layer.masksToBounds = true
         
         return cell
     }
@@ -261,11 +271,25 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                     }
                 }
                 self.collectionView?.reloadData()
+                self.downloadAllImages()
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
             } else {
                 print("Error: \(error!) ")
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
             }
+        }
+    }
+    
+    func downloadAllImages () {
+        
+        for object in localContentArray {
+            let dasObject = object as! PFObject
+            let imageFile = dasObject["contentFile"] as! PFFile
+            let imageUrl = imageFile.url
+            let url = URL(string: imageUrl!)
+            let imageManager = SDWebImageManager.shared()
+            imageManager.imageDownloader?.downloadImage(with: url, options: [], progress: nil, completed: { (image, data, error, success) in
+            })
         }
     }
     

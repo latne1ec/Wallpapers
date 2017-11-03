@@ -8,22 +8,34 @@
 
 import UIKit
 import GoogleMobileAds
+import Parse
 
-class AdManager: NSObject, GADInterstitialDelegate {
+protocol AdManagerDelegate {
+    func enableBanner()
+}
+
+class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVideoPlaybackDelegate {
     
     private static let _instance = AdManager()
     static var Instance: AdManager {
         return _instance
     }
     
+    var delegate: AdManagerDelegate?
+
     var interstitial: GADInterstitial!
     var interstitialIsShowing: Bool?
+    var monetizationEnabled: Bool?
+    var shouldShowAd: Bool?
     
-    
-    // ADMOB
-    public func loadRewardedVideoAd() {
-        GADRewardBasedVideoAd.sharedInstance().load(GADRequest(),
-                                                    withAdUnitID: "ca-app-pub-2441744724896180/3585488732")
+    func detectIfMonetizationEnabled () {
+        PFConfig.getInBackground { (config, error) in
+            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
+            if self.monetizationEnabled == true {
+                print("here")
+                self.delegate?.enableBanner()
+            }
+        }
     }
     
     // ADMOB
@@ -31,73 +43,69 @@ class AdManager: NSObject, GADInterstitialDelegate {
         interstitial = createAndLoadInterstitial()
     }
     
-    // ADMOB
     func createAndLoadInterstitial() -> GADInterstitial {
-        interstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        interstitial = GADInterstitial(adUnitID: "ca-app-pub-2441744724896180/3211349561")
         interstitial.delegate = self
         interstitial.load(GADRequest())
         return interstitial
     }
     
-    // ADMOB
-    func showInterstitial (fromVC: UIViewController) {
+    func showAdmobInterstitial (fromVC: UIViewController) {
         if interstitial.isReady {
             interstitial.present(fromRootViewController: fromVC)
             interstitialIsShowing = true
         }
     }
     
-    // ADMOB
     func interstitialDidDismissScreen(_ ad: GADInterstitial) {
-        interstitial = createAndLoadInterstitial()
+        preloadInterstitial()
         interstitialIsShowing = false
-    }
-    
-    public func showAd () {
-        let vc = UIApplication.shared.keyWindow?.rootViewController
-        if GADRewardBasedVideoAd.sharedInstance().isReady == true {
-            GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: vc!)
+        print("did dismiss")
+        if PFUser.current() != nil {
+            PFUser.current()?.incrementKey("interstitialWatchCount")
+            PFUser.current()?.saveInBackground()
         }
     }
     
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
-                            didRewardUserWith reward: GADAdReward) {
-        print("Reward received with currency: \(reward.type), amount \(reward.amount).")
+    func interstitialDidReceiveAd(_ ad: GADInterstitial) {
+        print("Interstitial ready")
     }
     
-    func rewardBasedVideoAdDidReceive(_ rewardBasedVideoAd:GADRewardBasedVideoAd) {
-        print("Reward based video ad is received.")
-    }
-    
-    func rewardBasedVideoAdDidOpen(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        print("Opened reward based video ad.")
-    }
-    
-    func rewardBasedVideoAdDidStartPlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        print("Reward based video ad started playing.")
-    }
-    
-    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        print("Reward based video ad is closed.")
-    }
-    
-    func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        print("Reward based video ad will leave application.")
-    }
-    
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
-                            didFailToLoadWithError error: Error) {
-        print("Reward based video ad failed to load.")
+    func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
+        print(error.localizedDescription)
     }
     
     
-    // Applovin
+    // APPLOVIN
+    
     func showApplovinAd () {
         if ALInterstitialAd.isReadyForDisplay() {
             ALInterstitialAd.show()
         }
     }
-
     
+    func ad(_ ad: ALAd, wasDisplayedIn view: UIView) {
+        
+    }
+    
+    func ad(_ ad: ALAd, wasHiddenIn view: UIView) {
+        print("was hidden")
+        if PFUser.current() != nil {
+            PFUser.current()?.incrementKey("interstitialWatchCount")
+            PFUser.current()?.saveInBackground()
+        }
+    }
+    
+    func ad(_ ad: ALAd, wasClickedIn view: UIView) {
+        print("clicked")
+    }
+    
+    func videoPlaybackBegan(in ad: ALAd) {
+        
+    }
+    
+    func videoPlaybackEnded(in ad: ALAd, atPlaybackPercent percentPlayed: NSNumber, fullyWatched wasFullyWatched: Bool) {
+        
+    }
     
 }
