@@ -9,8 +9,10 @@ PODS:
   - NVActivityIndicatorView (4.0.0):
     - NVActivityIndicatorView/Presenter (= 4.0.0)
   - NVActivityIndicatorView/Presenter (4.0.0)
+  - OneSignal (2.5.6)
   - Parse (1.15.3):
     - Bolts/Tasks (~> 1.8)
+  - PickerView (0.3.3)
   - PopupDialog (0.6.0)
   - SDWebImage (4.1.1):
     - SDWebImage/Core (= 4.1.1)
@@ -22,7 +24,9 @@ DEPENDENCIES:
   - GoogleMobileAdsMediationAppLovin
   - GSImageViewerController
   - NVActivityIndicatorView
+  - OneSignal (< 3.0, >= 2.5.2)
   - Parse
+  - PickerView
   - PopupDialog (~> 0.6)
   - SDWebImage (~> 4.0)
   - SwiftyStoreKit
@@ -34,11 +38,13 @@ SPEC CHECKSUMS:
   GoogleMobileAdsMediationAppLovin: 80dd55f6d6905ed09a807b69c9970aa4c6fc7062
   GSImageViewerController: 75df64f6b7279e7ec19b1daf5fd01b1ca784055d
   NVActivityIndicatorView: 54c9b93b6f25a4f467512680c0c90c09a1095cf2
+  OneSignal: 9ec286d9156b86b3975f45d928e70f46c74ef4b7
   Parse: cdc0f1f975ee8be0409e66f21b05df4ae067047c
+  PickerView: a6703d2f7cb1fafc8a3aef4af255a5acd320ddff
   PopupDialog: 687af43af0f7b89948cd411ac701865f931bd6dc
   SDWebImage: caf91ee75671c95eb7b3073cd90649d25f852a88
   SwiftyStoreKit: 8c193678fabbaafb4430a536497613f89fefd7ec
 
-PODFILE CHECKSUM: e98a0c32614c96c6fc29ba94ec02a29ba185fe10
+PODFILE CHECKSUM: 9444d7ab1f8fcfcc802e21fd580ff37f193322f6
 
 COCOAPODS: 1.2.0

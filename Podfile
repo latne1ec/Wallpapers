@@ -14,4 +14,11 @@ target 'wallpapers' do
   pod 'NVActivityIndicatorView'
   pod 'GoogleMobileAdsMediationAppLovin'
   pod 'SwiftyStoreKit'
+  pod 'PickerView'
+  pod 'OneSignal', '>= 2.5.2', '< 3.0'
+
+end
+
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignal', '>= 2.5.2', '< 3.0'
 end

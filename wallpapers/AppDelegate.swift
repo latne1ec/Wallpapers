@@ -11,9 +11,15 @@ import Parse
 import GoogleMobileAds
 import SwiftyStoreKit
 import StoreKit
+import OneSignal
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    private static let _instance = AppDelegate()
+    static var Instance: AppDelegate {
+        return _instance
+    }
 
     var window: UIWindow?
 
@@ -29,14 +35,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PFUser.current()?.incrementKey("runCount")
         PFUser.current()?.saveInBackground()
         
-        ALSdk.initializeSdk()
         AdManager.Instance.detectIfMonetizationEnabled()
+        ALSdk.initializeSdk()
         AdManager.Instance.preloadInterstitial()
         AdManager.Instance.shouldShowAd = false
+        
+        // One Signal Push Notifications
+        let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false]
+        OneSignal.initWithLaunchOptions(launchOptions,
+                                        appId: "a4b7b027-e899-4fe2-bc0d-534dc6fef35b",
+                                        handleNotificationAction: nil,
+                                        settings: onesignalInitSettings)
+        
+        OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
         return true
     }
 
+    func requestPushNotifications () {
+        // Recommend moving the below line to prompt for push after informing the user about
+        //   how your app will use them.
+        OneSignal.promptForPushNotifications(userResponse: { accepted in
+            print("User accepted notifications: \(accepted)")
+        })
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

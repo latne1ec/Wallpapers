@@ -29,13 +29,15 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
     var shouldShowAd: Bool?
     
     func detectIfMonetizationEnabled () {
-        PFConfig.getInBackground { (config, error) in
-            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
-            if self.monetizationEnabled == true {
-                print("here")
-                self.delegate?.enableBanner()
-            }
-        }
+//        PFConfig.getInBackground { (config, error) in
+//            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
+//            if self.monetizationEnabled == true {
+//                print("here")
+//                self.delegate?.enableBanner()
+//            }
+//        }
+        
+        self.monetizationEnabled = false
     }
     
     // ADMOB
@@ -69,6 +71,7 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
     
     func interstitialDidReceiveAd(_ ad: GADInterstitial) {
         print("Interstitial ready")
+        //self.delegate?.enableBanner()
     }
     
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {

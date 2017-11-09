@@ -79,6 +79,55 @@
             </objects>
             <point key="canvasLocation" x="1769" y="-136"/>
         </scene>
+        <!--Category View Controller-->
+        <scene sceneID="I0h-Dx-G67">
+            <objects>
+                <viewController storyboardIdentifier="Category" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CNT-lV-eY0" customClass="CategoryViewController" customModule="wallpapers" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SlY-pc-Ar7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Ti-iS-uRD" customClass="PickerView" customModule="PickerView">
+                                <rect key="frame" x="0.0" y="106" width="375" height="559"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDZ-o6-2sG">
+                                <rect key="frame" x="118" y="681" width="140" height="52"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="DCr-Gw-Mdv"/>
+                                    <constraint firstAttribute="width" constant="140" id="Zap-cg-e15"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="SELECT">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="doneButtonTapped:" destination="CNT-lV-eY0" eventType="touchUpInside" id="d9e-bA-2BA"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.94999999999999996" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0Ti-iS-uRD" firstAttribute="centerX" secondItem="SlY-pc-Ar7" secondAttribute="centerX" id="0eb-Bm-ffH"/>
+                            <constraint firstItem="TS4-fp-Z2s" firstAttribute="trailing" secondItem="IDZ-o6-2sG" secondAttribute="trailing" constant="117" id="7y1-Df-RIm"/>
+                            <constraint firstItem="0Ti-iS-uRD" firstAttribute="leading" secondItem="TS4-fp-Z2s" secondAttribute="leading" id="CUv-90-Axk"/>
+                            <constraint firstItem="IDZ-o6-2sG" firstAttribute="leading" secondItem="TS4-fp-Z2s" secondAttribute="leading" constant="118" id="ThA-5T-zxS"/>
+                            <constraint firstItem="0Ti-iS-uRD" firstAttribute="centerY" secondItem="SlY-pc-Ar7" secondAttribute="centerY" constant="-20.5" id="ZeL-8A-IGm"/>
+                            <constraint firstItem="0Ti-iS-uRD" firstAttribute="top" secondItem="TS4-fp-Z2s" secondAttribute="top" constant="62" id="aOU-xr-ByC"/>
+                            <constraint firstItem="IDZ-o6-2sG" firstAttribute="top" secondItem="0Ti-iS-uRD" secondAttribute="bottom" constant="16" id="y5k-x9-jSe"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="TS4-fp-Z2s"/>
+                    </view>
+                    <connections>
+                        <outlet property="doneButton" destination="IDZ-o6-2sG" id="QX0-FP-QXa"/>
+                        <outlet property="pickerView" destination="0Ti-iS-uRD" id="lIu-ce-xry"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gnd-A7-lV4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2840.8000000000002" y="-137.4384236453202"/>
+        </scene>
         <!--Popup View Controller-->
         <scene sceneID="ynO-QC-OT0">
             <objects>
@@ -457,7 +506,7 @@
                                         </attributes>
                                     </fragment>
                                     <fragment>
-                                        <mutableString key="content">
+                                        <string key="content">
   •  You can subscribe to a weekly plan that comes with a free 3 day trial ($8.99 after the free trial expires)
   •  The payment will be charged to your iTunes Account at confirmation of purchase
   •  Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period
@@ -466,7 +515,7 @@
   •  You may turn off the auto-renewal of your subscription via iTunes Account Settings
   •  Any unused portion of a free trial period will be forfeited when the user purchases our subscriptions
 
-</mutableString>
+</string>
                                         <attributes>
                                             <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <font key="NSFont" size="13" name="Helvetica"/>

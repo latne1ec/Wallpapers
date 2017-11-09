@@ -17,7 +17,7 @@ import StoreKit
 
 private let reuseIdentifier = "Cell"
 
-class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate, AdManagerDelegate {
+class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate, AdManagerDelegate, CategoryManagerDelegate {
 
     var statusBarView: UIView?
     var localContentArray = NSMutableArray()
@@ -28,7 +28,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        CategoryManager.Instance.currentCategory = "NEW"
         setupLayout()
         setupStatusBarBKG()
         retrieveContent()
@@ -47,10 +47,22 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         //setupBanner()
         User.Instance.delegate = self
         AdManager.Instance.delegate = self
+        CategoryManager.Instance.delegate = self
+    }
+    
+    func categoryChanged() {
+        rateButton.setTitle(CategoryManager.Instance.currentCategory, for: .normal)
+        retrieveContent()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         checkInternetConnection()
+        print(PushManager.Instance)
+        self.perform(#selector(askForPush), with: nil, afterDelay: 0.5)
+    }
+    
+    @objc func askForPush () {
+         PushManager.Instance.askUserToAllowNotifications(from: self)
     }
     
     func checkInternetConnection () {
@@ -76,8 +88,8 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        rateButton.setTitle("RATE US 😁", for: UIControlState.normal)
-        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        rateButton.setTitle("NEW", for: UIControlState.normal)
+        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15.5)
         rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         rateButton.backgroundColor = UIColor.white
         rateButton.layer.cornerRadius = 26
@@ -134,6 +146,12 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     @objc func requestReview () {
+        
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Category") as! CategoryViewController
+        present(popupVC, animated: true, completion: nil)
+        
+        return
         rateButton.alpha = 1.0
         let storeProductVC = SKStoreProductViewController()
         storeProductVC.delegate = self
@@ -192,10 +210,15 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MainCollectionViewCell
-        let spinnerFrame = CGRect(x: cell.frame.size.width/2-12, y: cell.frame.size.height/2-12, width: 24, height: 24)
-        let spinner = NVActivityIndicatorView(frame: spinnerFrame, type: NVActivityIndicatorType.ballScale, color: UIColor.lightGray, padding:nil)
-        spinner.startAnimating()
-        cell.addSubview(spinner)
+        
+        if cell.viewWithTag(99) == nil {
+            let spinnerFrame = CGRect(x: cell.frame.size.width/2-12, y: cell.frame.size.height/2-12, width: 24, height: 24)
+            let spinner = NVActivityIndicatorView(frame: spinnerFrame, type: NVActivityIndicatorType.ballScale, color: UIColor.lightGray, padding:nil)
+            spinner.tag = 99
+            spinner.startAnimating()
+            cell.addSubview(spinner)
+        }
+    
         let object = self.localContentArray[indexPath.row] as? PFObject
         let imageFile = object!["contentFile"] as! PFFile
         let imageUrl = imageFile.url
@@ -203,15 +226,18 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
             // Perform operation.
             cell.imageView.alpha = 0
-            spinner.stopAnimating()
-            spinner.removeFromSuperview()
-            spinner.isHidden = true
-            UIView.animate(withDuration: 0.15, animations: {
+            if let spin = cell.viewWithTag(99) {
+                let spinner = spin as! NVActivityIndicatorView
                 spinner.stopAnimating()
                 spinner.removeFromSuperview()
                 spinner.isHidden = true
-                cell.imageView.alpha = 1
-            })
+                UIView.animate(withDuration: 0.15, animations: {
+                    spinner.stopAnimating()
+                    spinner.removeFromSuperview()
+                    spinner.isHidden = true
+                })
+            }
+            cell.imageView.alpha = 1
         })
         
         cell.imageView.layer.cornerRadius = 6
@@ -234,8 +260,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
+        if CategoryManager.Instance.currentCategory != "NEW" {
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            return footerView
+        }
         let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
-        
         footerView.backgroundColor = UIColor.black
         let label = UILabel()
         label.frame = footerView.frame
@@ -255,13 +284,26 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
 
     }
     
+    @objc func registerForPush () {
+        print("dope")
+    }
+    
     func retrieveContent () {
+        let loader = LoadingView()
+        loader.frame = view.frame
+        self.view.addSubview(loader)
+        loader.show()
         let query = PFQuery(className:"Content")
+        if CategoryManager.Instance.currentCategory! == "NEW" {
+        } else {
+            query.whereKey("mainCategory", equalTo: CategoryManager.Instance.currentCategory!.lowercased())
+        }
         query.whereKey("isVisible", equalTo:true)
         query.order(byDescending: "createdAt")
         query.findObjectsInBackground {
             (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
+                loader.dismiss()
                 if self.localContentArray.count > 0 {
                     self.localContentArray.removeAllObjects()
                 }
@@ -273,7 +315,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                 self.collectionView?.reloadData()
                 self.downloadAllImages()
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
+                self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0),
+                                                  at: .top,
+                                                  animated: true)
             } else {
+                loader.dismiss()
                 print("Error: \(error!) ")
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
             }

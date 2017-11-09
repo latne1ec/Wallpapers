@@ -36,7 +36,7 @@ class LoadingView: UIView {
     }
     
     func show () {
-        UIView.animate(withDuration: 0.15, animations: {
+        UIView.animate(withDuration: 0.0, animations: {
             self.alpha = 0.75
         }) { (success) in
         }
