@@ -18,12 +18,15 @@ class CategoryManager: NSObject {
     static var Instance: CategoryManager {
         return _instance
     }
-    var categories = ["NEW","ABSTRACT","BEACH","CITY","FLOWERS","FOREST","NATURE","OCEAN","SPACE"]
+    var categories = ["NEW","ARCHITECTURE","ART","CITY","FLOWERS","NATURE","OCEAN","SPACE"]
     
     var delegate: CategoryManagerDelegate?
     
     var currentCategory: String? {
         didSet {
+            if currentCategory == oldValue {
+                return
+            }
             delegate?.categoryChanged()
         }
     }

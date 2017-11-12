@@ -12,3 +12,10 @@
 //            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
 //            self.present(activityVC, animated: true, completion: nil)
 //        }
+
+
+categoryButton.alpha = 1.0
+let storeProductVC = SKStoreProductViewController()
+storeProductVC.delegate = self
+storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
+self.present(storeProductVC, animated: true, completion: nil)

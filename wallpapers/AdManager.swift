@@ -22,21 +22,19 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
     }
     
     var delegate: AdManagerDelegate?
-
     var interstitial: GADInterstitial!
     var interstitialIsShowing: Bool?
     var monetizationEnabled: Bool?
     var shouldShowAd: Bool?
+    var counter = 0
     
     func detectIfMonetizationEnabled () {
 //        PFConfig.getInBackground { (config, error) in
 //            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
 //            if self.monetizationEnabled == true {
-//                print("here")
 //                self.delegate?.enableBanner()
 //            }
 //        }
-        
         self.monetizationEnabled = false
     }
     

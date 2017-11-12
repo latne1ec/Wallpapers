@@ -346,7 +346,7 @@
                                             <constraint firstAttribute="height" constant="52" id="3eT-kb-39S"/>
                                             <constraint firstAttribute="width" constant="240" id="ES6-dT-TpD"/>
                                         </constraints>
-                                        <state key="normal" image="button1.1.png">
+                                        <state key="normal" image="removeads.png">
                                             <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         </state>
                                         <connections>
@@ -372,7 +372,7 @@
                                             <constraint firstAttribute="width" constant="192" id="1vp-mQ-0Wb"/>
                                             <constraint firstAttribute="height" constant="41" id="BER-BL-y00"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                         <state key="normal" title="RESTORE PURCHASE">
                                             <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -386,7 +386,7 @@
                                             <action selector="restorePurchasesTapped:" destination="2VZ-4A-BGS" eventType="touchUpInside" id="2xX-X6-Doy"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CYZ-rK-pZt">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CYZ-rK-pZt">
                                         <rect key="frame" x="301" y="419" width="36" height="36"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <state key="normal" title="?">
@@ -671,5 +671,6 @@ Please visit: https://levellabs.wordpress.com/terms-of-service-and-privacy-polic
         <image name="button1.1.png" width="430" height="93"/>
         <image name="button3.png" width="430" height="93"/>
         <image name="close2.png" width="150" height="150"/>
+        <image name="removeads.png" width="430" height="93"/>
     </resources>
 </document>

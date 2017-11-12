@@ -39,7 +39,7 @@ class CategoryViewController: UIViewController, PickerViewDelegate, PickerViewDa
     }
     
     func pickerViewHeightForRows(_ pickerView: PickerView) -> CGFloat {
-        return 50.0 // In this example I'm returning arbitrary 50.0pt but you should return the row height you want.
+        return 50.0
     }
     
     func pickerView(_ pickerView: PickerView, didSelectRow row: Int) {
@@ -62,6 +62,6 @@ class CategoryViewController: UIViewController, PickerViewDelegate, PickerViewDa
     }
     
     func dismiss () {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: false, completion: nil)
     }
 }

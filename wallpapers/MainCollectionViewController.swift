@@ -23,7 +23,10 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     var localContentArray = NSMutableArray()
     var refresher:UIRefreshControl!
     var refresherNew: NVActivityIndicatorView!
-    var rateButton = UIButton()
+    var pullingToRefresh: Bool?
+    var categoryButton = UIButton()
+    var removeAdsButton = UIButton()
+    var shareButton = UIButton()
     var bannerView: GADBannerView!
     
     override func viewDidLoad() {
@@ -44,15 +47,21 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Footer");
         
         setupMenu()
-        //setupBanner()
         User.Instance.delegate = self
         AdManager.Instance.delegate = self
         CategoryManager.Instance.delegate = self
+        pullingToRefresh = false
     }
     
     func categoryChanged() {
-        rateButton.setTitle(CategoryManager.Instance.currentCategory, for: .normal)
+        categoryButton.setTitle(CategoryManager.Instance.currentCategory, for: .normal)
+        if CategoryManager.Instance.currentCategory == "ARCHITECTURE" {
+            categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 8)
+        } else {
+            categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
+        }
         retrieveContent()
+        pullingToRefresh = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -88,22 +97,58 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        rateButton.setTitle("NEW", for: UIControlState.normal)
-        rateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15.5)
-        rateButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
-        rateButton.backgroundColor = UIColor.white
-        rateButton.layer.cornerRadius = 26
-        rateButton.frame = CGRect(x: width/2-60, y: height-114, width: 120, height: 54)
-        rateButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
-        rateButton.layer.shadowOpacity = 1.0
-        rateButton.layer.shadowRadius = 20.0
-        rateButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-        self.view.addSubview(rateButton)
-        self.view.bringSubview(toFront: rateButton)
-        rateButton.addTarget(self, action: #selector(requestReview), for: UIControlEvents.touchUpInside)
-        rateButton.addTarget(self, action: #selector(lowerAlpha), for: UIControlEvents.touchDown)
-        rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
-        rateButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
+        categoryButton.setTitle("NEW", for: UIControlState.normal)
+        categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
+        categoryButton.titleLabel?.minimumScaleFactor = 0.5
+        categoryButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        categoryButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
+        categoryButton.backgroundColor = UIColor.white
+        //categoryButton.layer.cornerRadius = 26
+        //categoryButton.frame = CGRect(x: width/2-60, y: height-114, width: 120, height: 54)
+        categoryButton.layer.cornerRadius = 40
+        categoryButton.frame = CGRect(x: width/2-40, y: height-134, width: 80, height: 80)
+        categoryButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.70).cgColor
+        categoryButton.layer.shadowOpacity = 1.0
+        categoryButton.layer.shadowRadius = 9.0
+        categoryButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.view.addSubview(categoryButton)
+        self.view.bringSubview(toFront: categoryButton)
+        categoryButton.addTarget(self, action: #selector(selectCategory), for: UIControlEvents.touchUpInside)
+        categoryButton.addTarget(self, action: #selector(lowerAlpha), for: UIControlEvents.touchDown)
+        categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
+        
+        shareButton.setTitle("SHARE", for: UIControlState.normal)
+        shareButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
+        shareButton.setTitleColor(UIColor.darkText, for: .normal)
+        shareButton.backgroundColor = UIColor.white
+        shareButton.layer.cornerRadius = 26
+        shareButton.frame = CGRect(x: width/2-110, y: height-110, width: 54, height: 54)
+        shareButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        shareButton.layer.shadowOpacity = 1.0
+        shareButton.layer.shadowRadius = 8.0
+        shareButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        shareButton.addTarget(self, action: #selector(shareButtonTapped(sender:)), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
+        shareButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        self.view.addSubview(shareButton)
+        self.view.bringSubview(toFront: shareButton)
+        
+        removeAdsButton.setTitle("PRO", for: UIControlState.normal)
+        removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
+        removeAdsButton.setTitleColor(UIColor.darkText, for: .normal)
+        removeAdsButton.backgroundColor = UIColor.white
+        removeAdsButton.layer.cornerRadius = 26
+        removeAdsButton.frame = CGRect(x: width/2+55, y: height-110, width: 54, height: 54)
+        removeAdsButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        removeAdsButton.layer.shadowOpacity = 1.0
+        removeAdsButton.layer.shadowRadius = 8.0
+        removeAdsButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        removeAdsButton.addTarget(self, action: #selector(removeAdsButtonTapped(sender:)), for: .touchUpInside)
+        removeAdsButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
+        removeAdsButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        self.view.addSubview(removeAdsButton)
+        self.view.bringSubview(toFront: removeAdsButton)
     
     }
     
@@ -137,34 +182,48 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                              selector: #selector(initAd), userInfo: nil, repeats: false)
     }
     
-    @objc func heightenAlpha () {
-        rateButton.alpha = 1.0
+    @objc func heightenAlpha (sender: UIButton) {
+        sender.alpha = 1.0
     }
     
-    @objc func lowerAlpha () {
-        rateButton.alpha = 0.5
+    @objc func lowerAlpha (sender: UIButton) {
+        sender.alpha = 0.5
     }
     
-    @objc func requestReview () {
-        
+    @objc func selectCategory (sender: UIButton) {
+        sender.alpha = 1.0
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Category") as! CategoryViewController
-        present(popupVC, animated: true, completion: nil)
-        
-        return
-        rateButton.alpha = 1.0
-        let storeProductVC = SKStoreProductViewController()
-        storeProductVC.delegate = self
-        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
-        self.present(storeProductVC, animated: true, completion: nil)
+        present(popupVC, animated: false, completion: nil)
     }
+    
+    @objc func shareButtonTapped (sender: UIButton) {
+        sender.alpha = 1.0
+        let message = "Check out these cool wallpapers:"
+        if let link = NSURL(string: "https://itunes.apple.com/us/app/hd-wallpapers-backgrounds/id1306304549?ls=1&mt=8")
+        {
+            let objectsToShare = [message,link] as [Any]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+            self.present(activityVC, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func removeAdsButtonTapped (sender: UIButton) {
+        sender.alpha = 1.0
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
+        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+        present(popupVC, animated: true, completion: nil)
+    }
+
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
         viewController.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func refreshContent() {
-        
+        pullingToRefresh = true
         self.retrieveContent()
     }
     
@@ -292,7 +351,10 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let loader = LoadingView()
         loader.frame = view.frame
         self.view.addSubview(loader)
-        loader.show()
+        if pullingToRefresh == true {
+        } else {
+            loader.show()
+        }
         let query = PFQuery(className:"Content")
         if CategoryManager.Instance.currentCategory! == "NEW" {
         } else {
@@ -303,7 +365,9 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         query.findObjectsInBackground {
             (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
-                loader.dismiss()
+                if self.pullingToRefresh == false {
+                    loader.dismiss()
+                }
                 if self.localContentArray.count > 0 {
                     self.localContentArray.removeAllObjects()
                 }
@@ -315,11 +379,14 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                 self.collectionView?.reloadData()
                 self.downloadAllImages()
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
+                self.collectionView?.setContentOffset(.zero, animated: true)
                 self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0),
                                                   at: .top,
                                                   animated: true)
             } else {
-                loader.dismiss()
+                if self.pullingToRefresh == false {
+                    loader.dismiss()
+                }
                 print("Error: \(error!) ")
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
             }
@@ -341,6 +408,10 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     @objc func endRefreshing () {
         self.refresher.endRefreshing()
+        self.collectionView?.setContentOffset(.zero, animated: true)
+        self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0),
+                                          at: .top,
+                                          animated: true)
     }
 
 }
