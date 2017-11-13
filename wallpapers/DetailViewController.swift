@@ -154,32 +154,14 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func showInterstitial () {
         
-        if AdManager.Instance.monetizationEnabled == false {
-            return
-        }
-        
-        if AdManager.Instance.counter < 2 {
-            AdManager.Instance.counter+=1
-        } else if AdManager.Instance.counter == 2 {
-            AdManager.Instance.counter = 0
-            if AdManager.Instance.interstitial.isReady {
-                AdManager.Instance.showAdmobInterstitial(fromVC: self)
-            } else if ALInterstitialAd.isReadyForDisplay() {
-                AdManager.Instance.showApplovinAd()
-            } else {
-                // No Ad
-            }
-        }
-        
-//        if AdManager.Instance.shouldShowAd == false {
-//            let random = Int(arc4random_uniform(4))
-//            if random % 2 == 0 {
-//                AdManager.Instance.shouldShowAd = true
-//            }
-//        } else {
-//            print("yea")
-//            AdManager.Instance.shouldShowAd = false
+//        if AdManager.Instance.monetizationEnabled == false {
 //            return
+//        }
+//
+//        if AdManager.Instance.counter < 2 {
+//            AdManager.Instance.counter+=1
+//        } else if AdManager.Instance.counter == 2 {
+//            AdManager.Instance.counter = 0
 //            if AdManager.Instance.interstitial.isReady {
 //                AdManager.Instance.showAdmobInterstitial(fromVC: self)
 //            } else if ALInterstitialAd.isReadyForDisplay() {
@@ -188,6 +170,24 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
 //                // No Ad
 //            }
 //        }
+        
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+            return
+        }
+        
+        if AdManager.Instance.shouldShowAd == false {
+            AdManager.Instance.shouldShowAd = true
+        } else {
+            AdManager.Instance.shouldShowAd = false
+            if AdManager.Instance.interstitial.isReady {
+                AdManager.Instance.showAdmobInterstitial(fromVC: self)
+            } else if ALInterstitialAd.isReadyForDisplay() {
+                AdManager.Instance.showApplovinAd()
+            } else {
+                // No Ad
+            }
+        }
     }
     
     @objc func addSavebutton () {

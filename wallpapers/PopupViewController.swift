@@ -12,10 +12,10 @@ import Parse
 import SwiftyStoreKit
 import StoreKit
 
-var sharedSecret = "e1cff994993d43718a641288122d06bc"
+var sharedSecret = "3d99e9a864fb4c39b39c39a552bcd6b9"
 
 enum RegisteredPurchase: String {
-    case ProMembership = "promembershipweekly"
+    case ProMembership = "removeads"
 }
 
 class NetworkActivityIndicatorManager: NSObject {
@@ -41,7 +41,7 @@ class NetworkActivityIndicatorManager: NSObject {
 class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADInterstitialDelegate, ALAdRewardDelegate, ALAdVideoPlaybackDelegate, ALAdDisplayDelegate {
     
     
-    let bundleId = "com.teamlevellabs.wallpapers"
+    let bundleId = "com.teamlevellabs.hdwallpapers"
     var proMembership = RegisteredPurchase.ProMembership
 
     @IBOutlet weak var bkgView: UIView!
@@ -149,16 +149,18 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
                 let ac = UIAlertController(title: "Error", message: "An unknown error occured", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "OK", style: .default))
                 self.present(ac, animated: true)
-            }
-            else if results.restoredPurchases.count > 0 {
+            } else if results.restoredPurchases.count > 0 {
                 // RESTORE SUCCESS
                 let ac = UIAlertController(title: "Purchases Restored", message: "Your purchase has been successfully restored!", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
+                    self.homeVC?.removeBanner()
+                    self.perform(#selector(self.closePopup), with: nil, afterDelay: 0.25)
+                    User.Instance.setUserAsProMember()
+                })
+                ac.addAction(action)
                 self.present(ac, animated: true)
-                User.Instance.setUserAsProMember()
-                User.Instance.checkIfProMember()
-            }
-            else {
+                
+            } else {
                 let ac = UIAlertController(title: "Error", message: "No purchases to restore", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "OK", style: .default))
                 self.present(ac, animated: true)
@@ -292,7 +294,7 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
             switch result {
             case .success:
                 User.Instance.setUserAsProMember()
-                let ac = UIAlertController(title: "Success!", message: "You are now a Pro Member, welcome to the club! Enjoy HD Wallpapers plus an Ad Free Experience for as long as your subscription is active.", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Success!", message: "You have successfully removed all ads from HD Wallpapers™", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
                     UIAlertAction in
                     self.homeVC?.removeBanner()

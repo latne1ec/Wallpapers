@@ -29,13 +29,17 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
     var counter = 0
     
     func detectIfMonetizationEnabled () {
-//        PFConfig.getInBackground { (config, error) in
-//            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
-//            if self.monetizationEnabled == true {
-//                self.delegate?.enableBanner()
-//            }
-//        }
-        self.monetizationEnabled = false
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+            self.monetizationEnabled = false
+            return
+        }
+        PFConfig.getInBackground { (config, error) in
+            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
+            if self.monetizationEnabled == true {
+                self.delegate?.enableBanner()
+            }
+        }
     }
     
     // ADMOB

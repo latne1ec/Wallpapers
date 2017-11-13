@@ -49,6 +49,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+            for purchase in purchases {
+                if purchase.transaction.transactionState == .purchased || purchase.transaction.transactionState == .restored {
+                    if purchase.needsFinishTransaction {
+                        // Deliver content from server, then:
+                        SwiftyStoreKit.finishTransaction(purchase.transaction)
+                    }
+                    print("purchased: \(purchase)")
+                }
+            }
+        }
+        
         return true
     }
 

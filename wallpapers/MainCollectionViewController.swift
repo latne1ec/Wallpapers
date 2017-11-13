@@ -55,10 +55,24 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     func categoryChanged() {
         categoryButton.setTitle(CategoryManager.Instance.currentCategory, for: .normal)
-        if CategoryManager.Instance.currentCategory == "ARCHITECTURE" {
-            categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 8)
-        } else {
-            categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
+        
+        if let category = CategoryManager.Instance.currentCategory {
+            switch category {
+            case "ARCHITECTURE":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 8)
+            case "NEW":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            case "ART":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            case "CITY":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12.5)
+            case "FLOWERS":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
+            case "NATURE", "OCEAN", "SPACE", "TRAVEL":
+                categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
+            default:
+                 categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12.5)
+            }
         }
         retrieveContent()
         pullingToRefresh = false
@@ -98,7 +112,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let height = self.view.frame.size.height
         
         categoryButton.setTitle("NEW", for: UIControlState.normal)
-        categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
+        categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         categoryButton.titleLabel?.minimumScaleFactor = 0.5
         categoryButton.titleLabel?.adjustsFontSizeToFitWidth = true
         categoryButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
@@ -118,7 +132,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
         
-        shareButton.setTitle("SHARE", for: UIControlState.normal)
+        shareButton.setTitle("RATE", for: UIControlState.normal)
         shareButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
         shareButton.setTitleColor(UIColor.darkText, for: .normal)
         shareButton.backgroundColor = UIColor.white
@@ -128,14 +142,14 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         shareButton.layer.shadowOpacity = 1.0
         shareButton.layer.shadowRadius = 8.0
         shareButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-        shareButton.addTarget(self, action: #selector(shareButtonTapped(sender:)), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(rateButtonTapped(sender:)), for: .touchUpInside)
         shareButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
         shareButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         self.view.addSubview(shareButton)
         self.view.bringSubview(toFront: shareButton)
         
-        removeAdsButton.setTitle("PRO", for: UIControlState.normal)
-        removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
+        removeAdsButton.setTitle("NO ADS", for: UIControlState.normal)
+        removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
         removeAdsButton.setTitleColor(UIColor.darkText, for: .normal)
         removeAdsButton.backgroundColor = UIColor.white
         removeAdsButton.layer.cornerRadius = 26
@@ -197,16 +211,12 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         present(popupVC, animated: false, completion: nil)
     }
     
-    @objc func shareButtonTapped (sender: UIButton) {
+    @objc func rateButtonTapped (sender: UIButton) {
         sender.alpha = 1.0
-        let message = "Check out these cool wallpapers:"
-        if let link = NSURL(string: "https://itunes.apple.com/us/app/hd-wallpapers-backgrounds/id1306304549?ls=1&mt=8")
-        {
-            let objectsToShare = [message,link] as [Any]
-            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
-            self.present(activityVC, animated: true, completion: nil)
-        }
+        let storeProductVC = SKStoreProductViewController()
+        storeProductVC.delegate = self
+        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
+        self.present(storeProductVC, animated: true, completion: nil)
     }
     
     @objc func removeAdsButtonTapped (sender: UIButton) {
@@ -214,6 +224,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
         popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+        popupVC.homeVC = self
         present(popupVC, animated: true, completion: nil)
     }
 
