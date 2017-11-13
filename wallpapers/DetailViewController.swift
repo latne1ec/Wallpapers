@@ -154,9 +154,6 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func showInterstitial () {
         
-//        if AdManager.Instance.monetizationEnabled == false {
-//            return
-//        }
 //
 //        if AdManager.Instance.counter < 2 {
 //            AdManager.Instance.counter+=1
@@ -170,6 +167,10 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
 //                // No Ad
 //            }
 //        }
+        
+        if AdManager.Instance.monetizationEnabled == false {
+            return
+        }
         
         let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
         if userIsProMember == true {

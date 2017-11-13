@@ -34,12 +34,13 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
             self.monetizationEnabled = false
             return
         }
-        PFConfig.getInBackground { (config, error) in
-            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
-            if self.monetizationEnabled == true {
-                self.delegate?.enableBanner()
-            }
-        }
+//        PFConfig.getInBackground { (config, error) in
+//            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
+//            if self.monetizationEnabled == true {
+//                self.delegate?.enableBanner()
+//            }
+//        }
+        self.monetizationEnabled = false
     }
     
     // ADMOB
