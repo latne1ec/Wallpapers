@@ -33,13 +33,13 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "hdnewx120.png",
+      "filename" : "colors6x120.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "hdnewx180.png",
+      "filename" : "colors6x180.png",
       "scale" : "3x"
     },
     {
@@ -90,7 +90,7 @@
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "hdnew.jpg",
+      "filename" : "colors6.jpg",
       "scale" : "1x"
     }
   ],

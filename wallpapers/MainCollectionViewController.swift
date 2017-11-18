@@ -51,6 +51,23 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         AdManager.Instance.delegate = self
         CategoryManager.Instance.delegate = self
         pullingToRefresh = false
+        
+        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+        if userIsProMember == true {
+        } else {
+            if PFUser.current() != nil {
+                /// && PFUser.current()?.object(forKey: "runCount") as! Int > 1
+                self.perform(#selector(showPro), with: nil, afterDelay: 0.75)
+            }
+        }
+    }
+    
+    @objc func showPro () {
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Pro") as! PopupViewController
+        popupVC.popupImage = UIImage(named: "Screenshot1.6.jpg")
+        popupVC.homeVC = self
+        present(popupVC, animated: true, completion: nil)
     }
     
     func categoryChanged() {
@@ -81,11 +98,6 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     override func viewDidAppear(_ animated: Bool) {
         checkInternetConnection()
         print(PushManager.Instance)
-        self.perform(#selector(askForPush), with: nil, afterDelay: 0.5)
-    }
-    
-    @objc func askForPush () {
-         PushManager.Instance.askUserToAllowNotifications(from: self)
     }
     
     func checkInternetConnection () {
@@ -125,12 +137,14 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         categoryButton.layer.shadowOpacity = 1.0
         categoryButton.layer.shadowRadius = 9.0
         categoryButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        categoryButton.addBorder()
         self.view.addSubview(categoryButton)
         self.view.bringSubview(toFront: categoryButton)
         categoryButton.addTarget(self, action: #selector(selectCategory), for: UIControlEvents.touchUpInside)
         categoryButton.addTarget(self, action: #selector(lowerAlpha), for: UIControlEvents.touchDown)
         categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
+        categoryButton.addBounce()
         
         shareButton.setTitle("RATE", for: UIControlState.normal)
         shareButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
@@ -141,12 +155,14 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         shareButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         shareButton.layer.shadowOpacity = 1.0
         shareButton.layer.shadowRadius = 8.0
+        shareButton.addBorder()
         shareButton.layer.shadowOffset = CGSize(width: 0, height: 0)
         shareButton.addTarget(self, action: #selector(rateButtonTapped(sender:)), for: .touchUpInside)
         shareButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
         shareButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         self.view.addSubview(shareButton)
         self.view.bringSubview(toFront: shareButton)
+        shareButton.addBounce()
         
         removeAdsButton.setTitle("NO ADS", for: UIControlState.normal)
         removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
@@ -157,12 +173,15 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         removeAdsButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         removeAdsButton.layer.shadowOpacity = 1.0
         removeAdsButton.layer.shadowRadius = 8.0
+        removeAdsButton.addBorder()
         removeAdsButton.layer.shadowOffset = CGSize(width: 0, height: 0)
         removeAdsButton.addTarget(self, action: #selector(removeAdsButtonTapped(sender:)), for: .touchUpInside)
         removeAdsButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
         removeAdsButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        //removeAdsButton.addRedDot()
         self.view.addSubview(removeAdsButton)
         self.view.bringSubview(toFront: removeAdsButton)
+        removeAdsButton.addBounce()
     
     }
     
@@ -275,7 +294,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.localContentArray.count
+        if self.localContentArray.count > 0 {
+            return self.localContentArray.count
+        } else {
+            return 0
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -289,29 +312,30 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
             cell.addSubview(spinner)
         }
     
-        let object = self.localContentArray[indexPath.row] as? PFObject
-        let imageFile = object!["contentFile"] as! PFFile
-        let imageUrl = imageFile.url
-        let url = URL(string: imageUrl!)
-        cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
-            // Perform operation.
-            cell.imageView.alpha = 0
-            if let spin = cell.viewWithTag(99) {
-                let spinner = spin as! NVActivityIndicatorView
-                spinner.stopAnimating()
-                spinner.removeFromSuperview()
-                spinner.isHidden = true
-                UIView.animate(withDuration: 0.15, animations: {
+        if let object = self.localContentArray[indexPath.row] as? PFObject {
+            let imageFile = object["contentFile"] as! PFFile
+            let imageUrl = imageFile.url
+            let url = URL(string: imageUrl!)
+            cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
+                // Perform operation.
+                cell.imageView.alpha = 0
+                if let spin = cell.viewWithTag(99) {
+                    let spinner = spin as! NVActivityIndicatorView
                     spinner.stopAnimating()
                     spinner.removeFromSuperview()
                     spinner.isHidden = true
-                })
-            }
-            cell.imageView.alpha = 1
-        })
+                    UIView.animate(withDuration: 0.15, animations: {
+                        spinner.stopAnimating()
+                        spinner.removeFromSuperview()
+                        spinner.isHidden = true
+                    })
+                }
+                cell.imageView.alpha = 1
+            })
         
-        cell.imageView.layer.cornerRadius = 6
-        cell.imageView.layer.masksToBounds = true
+            cell.imageView.layer.cornerRadius = 6
+            cell.imageView.layer.masksToBounds = true
+        }
         
         return cell
     }
@@ -354,10 +378,6 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
 
     }
     
-    @objc func registerForPush () {
-        print("dope")
-    }
-    
     func retrieveContent () {
         let loader = LoadingView()
         loader.frame = view.frame
@@ -389,6 +409,9 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                 }
                 self.collectionView?.reloadData()
                 self.downloadAllImages()
+                if self.localContentArray.count == 0 {
+                    return
+                }
                 self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.5)
                 self.collectionView?.setContentOffset(.zero, animated: true)
                 self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0),
@@ -405,7 +428,9 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     func downloadAllImages () {
-        
+        if localContentArray.count == 0 {
+            return
+        }
         for object in localContentArray {
             let dasObject = object as! PFObject
             let imageFile = dasObject["contentFile"] as! PFFile
@@ -425,4 +450,37 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                                           animated: true)
     }
 
+}
+
+extension UIButton {
+    func addRedDot () {
+        let redDot = UIView()
+        redDot.backgroundColor = UIColor.red
+        redDot.frame = CGRect(x: self.bounds.midX, y: self.bounds.midY+15, width: 4, height: 4)
+        redDot.layer.cornerRadius = 2
+        self.addSubview(redDot)
+    }
+    
+    func addBounce() {
+        self.addTarget(self, action: #selector(test), for: .touchDown)
+        self.addTarget(self, action: #selector(test2), for: .touchUpInside)
+        self.addTarget(self, action: #selector(test2), for: .touchDragExit)
+    }
+    
+    @objc func test () {
+        UIView.animate(withDuration: 0.05) {
+            self.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+        }
+    }
+    @objc func test2 () {
+        UIView.animate(withDuration: 0.05) {
+            self.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+    }
+    
+    func addBorder () {
+        // Not using
+        //self.layer.borderColor = UIColor.lightGray.cgColor
+        //self.layer.borderWidth = 0.5
+    }
 }

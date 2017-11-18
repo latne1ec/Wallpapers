@@ -38,8 +38,7 @@ class NetworkActivityIndicatorManager: NSObject {
     }
 }
 
-class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADInterstitialDelegate, ALAdRewardDelegate, ALAdVideoPlaybackDelegate, ALAdDisplayDelegate {
-    
+class PopupViewController: UIViewController {
     
     let bundleId = "com.teamlevellabs.hdwallpapers"
     var proMembership = RegisteredPurchase.ProMembership
@@ -63,32 +62,12 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
         self.popupImageView.image = popupImage
         self.popupImageView.clipsToBounds = true
     
-        interstitial = createAndLoadInterstitial()
-        
-    }
-    
-    func createAndLoadInterstitial() -> GADInterstitial {
-        interstitial = GADInterstitial(adUnitID: "ca-app-pub-2441744724896180/3211349561")
-        interstitial.delegate = self
-        interstitial.load(GADRequest())
-        return interstitial
-    }
-    
-    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
-        dismiss(animated: true, completion: nil)
-        if PFUser.current() != nil {
-            PFUser.current()?.incrementKey("interstitialWatchCount")
-            PFUser.current()?.saveInBackground()
-        }
-        parentVC?.saveImage()
-        parentVC?.heightenAlpha()
-        interstitial = createAndLoadInterstitial()
     }
 
     @IBAction func closePopup(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         parentVC?.heightenAlpha()
-        
+        PushManager.Instance.askUserToAllowNotifications()
     }
     
     @IBAction func buttonOneTapped(_ sender: Any) {
@@ -98,42 +77,6 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
     
     @IBAction func buttonTwoTapped(_ sender: Any) {
         
-        let random = Int(arc4random_uniform(4))
-        
-        if random % 2 == 0 {
-            // Prioritize ADMOB
-            if GADRewardBasedVideoAd.sharedInstance().isReady == true {
-                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
-            } else if ALIncentivizedInterstitialAd.isReadyForDisplay() {
-                ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
-                ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
-                ALIncentivizedInterstitialAd.showAndNotify(self)
-            } else if interstitial.isReady {
-                interstitial.present(fromRootViewController: self)
-            } else {
-                print("Interstital or Video Not ready")
-                dismiss(animated: true, completion: nil)
-                parentVC?.saveImage()
-                parentVC?.heightenAlpha()
-            }
-
-        } else {
-            // Prioritize APPLOVIN
-            if ALIncentivizedInterstitialAd.isReadyForDisplay() {
-                ALIncentivizedInterstitialAd.shared().adVideoPlaybackDelegate = self
-                ALIncentivizedInterstitialAd.shared().adDisplayDelegate = self
-                ALIncentivizedInterstitialAd.showAndNotify(self)
-            } else if interstitial.isReady {
-                interstitial.present(fromRootViewController: self)
-            } else if GADRewardBasedVideoAd.sharedInstance().isReady == true {
-                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
-            } else {
-                print("Interstital or Video Not ready")
-                dismiss(animated: true, completion: nil)
-                parentVC?.saveImage()
-                parentVC?.heightenAlpha()
-            }
-        }
     }
     
     @IBAction func restorePurchasesTapped(_ sender: UIButton) {
@@ -174,112 +117,6 @@ class PopupViewController: UIViewController, GADRewardBasedVideoAdDelegate, GADI
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Help")
         present(popupVC, animated: true, completion: nil)
         
-    }
-    
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
-                            didRewardUserWith reward: GADAdReward) {
-        // USER FINISHED VIDEO
-        userFinishedVideo = true
-        if PFUser.current() != nil {
-            PFUser.current()?.incrementKey("rewardedVideoWatchCount")
-            PFUser.current()?.saveInBackground()
-        }
-    }
-    
-    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        if userFinishedVideo {
-            dismiss(animated: true, completion: nil)
-            parentVC?.saveImage()
-            parentVC?.heightenAlpha()
-        } else {
-            let ac = UIAlertController(title: "Sorry", message: "You need to watch a full video to unlock and save this wallpaper.", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "OK", style: .default))
-            present(ac, animated: true)
-        }
-        //AdManager.Instance.loadRewardedVideoAd()
-    }
-    
-    
-    func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        // CANCELED
-    }
-    
-    
-    // APPLOVIN
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
-                            didFailToLoadWithError error: Error) {
-        print("Reward based video ad failed to load.")
-    }
-    
-    func rewardValidationRequest(for ad: ALAd, didSucceedWithResponse response: [AnyHashable : Any]) {
-        print("Showing Video")
-    }
-    
-    func rewardValidationRequest(for ad: ALAd, didExceedQuotaWithResponse response: [AnyHashable : Any]) {
-        
-    }
-    
-    func rewardValidationRequest(for ad: ALAd, wasRejectedWithResponse response: [AnyHashable : Any]) {
-        
-    }
-    
-    func videoPlaybackBegan(in ad: ALAd) {
-        
-    }
-    
-    func videoPlaybackEnded(in ad: ALAd, atPlaybackPercent percentPlayed: NSNumber, fullyWatched wasFullyWatched: Bool) {
-        if wasFullyWatched {
-            userFinishedVideo = true
-        }
-    }
-    
-    
-    func rewardValidationRequest(for ad: ALAd, didFailWithError responseCode: Int) {
-        print(responseCode)
-        if responseCode == kALErrorCodeIncentivizedUserClosedVideo {
-            
-            let ac = UIAlertController(title: "Sorry", message: "You need to watch a full video to unlock and save this wallpaper.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
-                UIAlertAction in
-                ALIncentivizedInterstitialAd.preloadAndNotify(nil)
-            }
-            ac.addAction(okAction)
-            present(ac, animated: true)
-        }
-    }
-    
-    func ad(_ ad: ALAd, wasDisplayedIn view: UIView) {
-        
-    }
-    
-    func ad(_ ad: ALAd, wasHiddenIn view: UIView) {
-        self.perform(#selector(performSave), with: nil, afterDelay: 0.75)
-    }
-    
-    @objc func performSave () {
-        if PFUser.current() != nil {
-            PFUser.current()?.incrementKey("rewardedVideoWatchCount")
-            PFUser.current()?.saveInBackground()
-        }
-        dismiss(animated: true, completion: nil)
-        parentVC?.saveImage()
-        parentVC?.heightenAlpha()
-        ALIncentivizedInterstitialAd.preloadAndNotify(nil)
-    }
-    
-    func ad(_ ad: ALAd, wasClickedIn view: UIView) {
-        
-    }
-    
-    
-    // IAP
-    
-    func getInfo (purchase: RegisteredPurchase) {
-        NetworkActivityIndicatorManager.NetworkOperationStarted()
-        SwiftyStoreKit.retrieveProductsInfo([bundleId + "." + purchase.rawValue], completion: {
-            result in
-            NetworkActivityIndicatorManager.NetworkOperationFinished()
-        })
     }
     
     func purchase (purchase: RegisteredPurchase) {

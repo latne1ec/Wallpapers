@@ -16,7 +16,7 @@ class PushManager: NSObject {
         return _instance
     }
     
-    func askUserToAllowNotifications (from vc: MainCollectionViewController) {
+    func askUserToAllowNotifications () {
         
 //        let random = Int(arc4random_uniform(4)) && random % 2 == 0
         

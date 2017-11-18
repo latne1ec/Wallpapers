@@ -61,6 +61,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        let query = PFQuery(className: "Categories")
+        query.findObjectsInBackground { (objects, error) in
+            if let categories = objects {
+                CategoryManager.Instance.categories.removeAll()
+                for category in categories {
+                    CategoryManager.Instance.categories.append(category["categoryName"] as! String)
+                }
+            }
+        }
+        
         return true
     }
 

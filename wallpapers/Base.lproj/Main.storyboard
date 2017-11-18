@@ -346,7 +346,7 @@
                                             <constraint firstAttribute="height" constant="52" id="3eT-kb-39S"/>
                                             <constraint firstAttribute="width" constant="240" id="ES6-dT-TpD"/>
                                         </constraints>
-                                        <state key="normal" image="removeads2.png">
+                                        <state key="normal" image="removeads2.1.png">
                                             <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         </state>
                                         <connections>
@@ -671,6 +671,6 @@ Please visit: https://levellabs.wordpress.com/terms-of-service-and-privacy-polic
         <image name="button1.1.png" width="430" height="93"/>
         <image name="button3.png" width="430" height="93"/>
         <image name="close2.png" width="150" height="150"/>
-        <image name="removeads2.png" width="430" height="93"/>
+        <image name="removeads2.1.png" width="430" height="93"/>
     </resources>
 </document>

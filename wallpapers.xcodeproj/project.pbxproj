@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		07041310658966C57C5EC858 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 995A07345B95E62A13411C79 /* libPods-OneSignalNotificationServiceExtension.a */; };
-		20031F151FB9E3A9002AA711 /* removeads2.png in Resources */ = {isa = PBXBuildFile; fileRef = 20031F141FB9E3A7002AA711 /* removeads2.png */; };
+		2002B4C01FBA6A180033A538 /* removeads2.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2002B4BF1FBA6A150033A538 /* removeads2.1.png */; };
+		200832941FBF431C00A5B220 /* removeads2.99.png in Resources */ = {isa = PBXBuildFile; fileRef = 200832921FBF431100A5B220 /* removeads2.99.png */; };
 		202960201F9AB545007E1FD2 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2029601F1F9AB545007E1FD2 /* LoadingView.swift */; };
 		202960241F9ABE38007E1FD2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202960231F9ABE38007E1FD2 /* User.swift */; };
 		202960261F9AD334007E1FD2 /* Screenshot1.6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 202960251F9AD332007E1FD2 /* Screenshot1.6.jpg */; };
@@ -44,7 +45,6 @@
 		20B7DA2E1F93D34500990DA4 /* button3.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B7DA2D1F93D2FB00990DA4 /* button3.png */; };
 		20D0D8B91F928A6300F277F0 /* button1.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D0D8B71F928A6000F277F0 /* button1.png */; };
 		20D0D8BA1F928A6300F277F0 /* button2.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D0D8B81F928A6000F277F0 /* button2.png */; };
-		20DF30E11FB8DCA400E84E69 /* removeads.png in Resources */ = {isa = PBXBuildFile; fileRef = 20DF30E01FB8DCA200E84E69 /* removeads.png */; };
 		20ED29D41F9CD80C0065BA56 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20ED29D31F9CD80C0065BA56 /* HelpViewController.swift */; };
 		20F87B311F8E53DA007E2B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F87B301F8E53DA007E2B8B /* AppDelegate.swift */; };
 		20F87B361F8E53DA007E2B8B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20F87B341F8E53DA007E2B8B /* Main.storyboard */; };
@@ -81,7 +81,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		20031F141FB9E3A7002AA711 /* removeads2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeads2.png; sourceTree = "<group>"; };
+		2002B4BF1FBA6A150033A538 /* removeads2.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeads2.1.png; sourceTree = "<group>"; };
+		200832921FBF431100A5B220 /* removeads2.99.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeads2.99.png; sourceTree = "<group>"; };
 		2029601F1F9AB545007E1FD2 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		202960231F9ABE38007E1FD2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		202960251F9AD332007E1FD2 /* Screenshot1.6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Screenshot1.6.jpg; sourceTree = "<group>"; };
@@ -122,7 +123,6 @@
 		20B7DA2D1F93D2FB00990DA4 /* button3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button3.png; sourceTree = "<group>"; };
 		20D0D8B71F928A6000F277F0 /* button1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button1.png; sourceTree = "<group>"; };
 		20D0D8B81F928A6000F277F0 /* button2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button2.png; sourceTree = "<group>"; };
-		20DF30E01FB8DCA200E84E69 /* removeads.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeads.png; sourceTree = "<group>"; };
 		20ED29D31F9CD80C0065BA56 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		20F87B2D1F8E53DA007E2B8B /* wallpapers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wallpapers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20F87B301F8E53DA007E2B8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -182,8 +182,8 @@
 		209F94091F92B4AF0070C046 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				20031F141FB9E3A7002AA711 /* removeads2.png */,
-				20DF30E01FB8DCA200E84E69 /* removeads.png */,
+				200832921FBF431100A5B220 /* removeads2.99.png */,
+				2002B4BF1FBA6A150033A538 /* removeads2.1.png */,
 				202960251F9AD332007E1FD2 /* Screenshot1.6.jpg */,
 				2094B0671F9A53780031145C /* button1.1.png */,
 				20B7DA2D1F93D2FB00990DA4 /* button3.png */,
@@ -390,16 +390,16 @@
 				202960261F9AD334007E1FD2 /* Screenshot1.6.jpg in Resources */,
 				20F87B471F8E5B78007E2B8B /* mango2.png in Resources */,
 				20D0D8BA1F928A6300F277F0 /* button2.png in Resources */,
+				2002B4C01FBA6A180033A538 /* removeads2.1.png in Resources */,
 				208BA5201F8EB09A00C955E1 /* green.png in Resources */,
 				2094B0681F9A537A0031145C /* button1.1.png in Resources */,
 				20F87B381F8E53DA007E2B8B /* Assets.xcassets in Resources */,
 				20494B281F926912009D2980 /* close.png in Resources */,
 				20D0D8B91F928A6300F277F0 /* button1.png in Resources */,
-				20031F151FB9E3A9002AA711 /* removeads2.png in Resources */,
 				20494B2A1F92698A009D2980 /* close2.png in Resources */,
 				206BC7271F9E1465000B2D82 /* Misc in Resources */,
+				200832941FBF431C00A5B220 /* removeads2.99.png in Resources */,
 				20F87B361F8E53DA007E2B8B /* Main.storyboard in Resources */,
-				20DF30E11FB8DCA400E84E69 /* removeads.png in Resources */,
 				20B7DA2E1F93D34500990DA4 /* button3.png in Resources */,
 				20494B241F92539A009D2980 /* test.png in Resources */,
 			);

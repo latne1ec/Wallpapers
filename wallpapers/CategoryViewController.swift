@@ -23,6 +23,7 @@ class CategoryViewController: UIViewController, PickerViewDelegate, PickerViewDa
         pickerView.backgroundColor = UIColor.clear
         pickerView.currentSelectedRow = 0//abs(Int(CategoryManager.Instance.categories.count/2))
         doneButton.layer.cornerRadius = 24
+        doneButton.addBounce()
     }
     
     @IBAction func doneButtonTapped(_ sender: UIButton) {
