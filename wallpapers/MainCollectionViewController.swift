@@ -393,6 +393,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         }
         query.whereKey("isVisible", equalTo:true)
         query.order(byDescending: "createdAt")
+        query.limit = 500
         query.findObjectsInBackground {
             (objects: [PFObject]?, error: Error?) -> Void in
             if error == nil {
