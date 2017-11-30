@@ -31,15 +31,14 @@
       "scale" : "3x"
     },
     {
-      "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "colors3x120.png",
+      "size" : "60x60",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "colors3x180.png",
+      "filename" : "hdnewbiggerx180.png",
       "scale" : "3x"
     },
     {
@@ -88,9 +87,8 @@
       "scale" : "2x"
     },
     {
-      "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "colors3.jpg",
+      "size" : "1024x1024",
       "scale" : "1x"
     }
   ],

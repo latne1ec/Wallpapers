@@ -196,7 +196,8 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        downloadButton.setTitle("SAVE WALLPAPER", for: UIControlState.normal)
+        let downloadButtonTitle = NSLocalizedString("Save", comment: "")
+        downloadButton.setTitle(downloadButtonTitle, for: UIControlState.normal)
         downloadButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         downloadButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         downloadButton.backgroundColor = UIColor.white

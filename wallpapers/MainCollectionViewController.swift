@@ -17,7 +17,7 @@ import StoreKit
 
 private let reuseIdentifier = "Cell"
 
-class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate, AdManagerDelegate, CategoryManagerDelegate {
+class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GADBannerViewDelegate, SKStoreProductViewControllerDelegate, UserDelegate, AdManagerDelegate, CategoryManagerDelegate, UIViewControllerPreviewingDelegate {
 
     var statusBarView: UIView?
     var localContentArray = NSMutableArray()
@@ -26,7 +26,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     var pullingToRefresh: Bool?
     var categoryButton = UIButton()
     var removeAdsButton = UIButton()
-    var shareButton = UIButton()
+    var settingsButton = UIButton()
     var bannerView: GADBannerView!
     
     override func viewDidLoad() {
@@ -57,9 +57,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         } else {
             if PFUser.current() != nil {
                 /// && PFUser.current()?.object(forKey: "runCount") as! Int > 1
-                self.perform(#selector(showPro), with: nil, afterDelay: 0.75)
+                //self.perform(#selector(showPro), with: nil, afterDelay: 0.75)
             }
         }
+        
+        //registerForPreviewing(with: self, sourceView: view)
     }
     
     @objc func showPro () {
@@ -146,27 +148,29 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         categoryButton.addTarget(self, action: #selector(heightenAlpha), for: .touchCancel)
         categoryButton.addBounce()
         
-        shareButton.setTitle("RATE", for: UIControlState.normal)
-        shareButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
-        shareButton.setTitleColor(UIColor.darkText, for: .normal)
-        shareButton.backgroundColor = UIColor.white
-        shareButton.layer.cornerRadius = 26
-        shareButton.frame = CGRect(x: width/2-110, y: height-110, width: 54, height: 54)
-        shareButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
-        shareButton.layer.shadowOpacity = 1.0
-        shareButton.layer.shadowRadius = 8.0
-        shareButton.addBorder()
-        shareButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-        shareButton.addTarget(self, action: #selector(rateButtonTapped(sender:)), for: .touchUpInside)
-        shareButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
-        shareButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
-        self.view.addSubview(shareButton)
-        self.view.bringSubview(toFront: shareButton)
-        shareButton.addBounce()
+        settingsButton.setImage(UIImage(named: "settingsButton"), for: .normal)
+        settingsButton.imageView?.contentMode = .scaleAspectFit
+        settingsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
+        //settingsButton.setTitleColor(UIColor.darkText, for: .normal)
+        settingsButton.backgroundColor = UIColor.white
+        settingsButton.layer.cornerRadius = 26
+        settingsButton.frame = CGRect(x: width/2-110, y: height-110, width: 54, height: 54)
+        settingsButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        settingsButton.layer.shadowOpacity = 1.0
+        settingsButton.layer.shadowRadius = 8.0
+        settingsButton.addBorder()
+        settingsButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        settingsButton.addTarget(self, action: #selector(rateButtonTapped(sender:)), for: .touchUpInside)
+        settingsButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
+        settingsButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
+        self.view.addSubview(settingsButton)
+        self.view.bringSubview(toFront: settingsButton)
+        settingsButton.addBounce()
         
-        removeAdsButton.setTitle("NO ADS", for: UIControlState.normal)
+        removeAdsButton.setImage(UIImage(named: "noads"), for: .normal)
+        removeAdsButton.imageView?.contentMode = .scaleAspectFit
         removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
-        removeAdsButton.setTitleColor(UIColor.darkText, for: .normal)
+        //removeAdsButton.setTitleColor(UIColor.darkText, for: .normal)
         removeAdsButton.backgroundColor = UIColor.white
         removeAdsButton.layer.cornerRadius = 26
         removeAdsButton.frame = CGRect(x: width/2+55, y: height-110, width: 54, height: 54)
@@ -175,7 +179,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         removeAdsButton.layer.shadowRadius = 8.0
         removeAdsButton.addBorder()
         removeAdsButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-        removeAdsButton.addTarget(self, action: #selector(removeAdsButtonTapped(sender:)), for: .touchUpInside)
+        removeAdsButton.addTarget(self, action: #selector(makePurchase), for: .touchUpInside)
         removeAdsButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
         removeAdsButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
         //removeAdsButton.addRedDot()
@@ -232,10 +236,9 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     @objc func rateButtonTapped (sender: UIButton) {
         sender.alpha = 1.0
-        let storeProductVC = SKStoreProductViewController()
-        storeProductVC.delegate = self
-        storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
-        self.present(storeProductVC, animated: true, completion: nil)
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        present(popupVC, animated: true, completion: nil)
     }
     
     @objc func removeAdsButtonTapped (sender: UIButton) {
@@ -352,6 +355,35 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         
     }
     
+    //3D Touch - Peek
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let indexPath = collectionView?.indexPathForItem(at: location),
+            let cell = collectionView?.cellForItem(at: indexPath) as? MainCollectionViewCell
+            else {
+                return nil
+        }
+        let imageInfo   = GSImageInfo(image: cell.imageView.image!, imageMode: .aspectFill)
+        let transitionInfo = GSTransitionInfo(fromView:(cell.imageView))
+        let imageViewer = DetailViewController(imageInfo: imageInfo, transitionInfo: transitionInfo)
+        //present(imageViewer, animated: true, completion: nil)
+        
+        //WHAT I PUT HERE TO SHOW MY DETAILVIEW DATA?
+        
+        if #available(iOS 9.0, *) {
+            previewingContext.sourceRect = cell.frame
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        return imageViewer
+    }
+    
+    //3D Touch - Pop
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        self.show(viewControllerToCommit, sender: self)
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
         if CategoryManager.Instance.currentCategory != "NEW" {
@@ -449,6 +481,35 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0),
                                           at: .top,
                                           animated: true)
+    }
+    
+    @objc func makePurchase (sender: UIButton) {
+        sender.alpha = 1.0
+        let loader = LoadingView()
+        loader.frame = view.frame
+        self.view.addSubview(loader)
+        loader.show()
+        SwiftyStoreKit.purchaseProduct("com.teamlevellabs.hdwallpapers.removeads", completion: {
+            result in
+            print(result)
+            switch result {
+            case .success:
+                User.Instance.setUserAsProMember()
+                self.removeBanner()
+                let ac = UIAlertController(title: "Success!", message: "You have successfully removed all ads from HD Wallpapers™", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                    UIAlertAction in
+                }
+                ac.addAction(okAction)
+                self.present(ac, animated: true)
+            case .error:
+                let ac = UIAlertController(title: "Error", message: "An error occured while attempting to complete your purchase. Please try again.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
+            }
+            loader.dismiss()
+            loader.removeFromSuperview()
+        })
     }
 
 }

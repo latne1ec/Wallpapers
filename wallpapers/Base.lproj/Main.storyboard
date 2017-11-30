@@ -346,7 +346,7 @@
                                             <constraint firstAttribute="height" constant="52" id="3eT-kb-39S"/>
                                             <constraint firstAttribute="width" constant="240" id="ES6-dT-TpD"/>
                                         </constraints>
-                                        <state key="normal" image="removeads2.1.png">
+                                        <state key="normal" image="removeads2.png">
                                             <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         </state>
                                         <connections>
@@ -665,12 +665,130 @@ Please visit: https://levellabs.wordpress.com/terms-of-service-and-privacy-polic
             </objects>
             <point key="canvasLocation" x="3198" y="732"/>
         </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="TaK-QO-Tmb">
+            <objects>
+                <viewController storyboardIdentifier="Settings" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Maj-EF-7oI" customClass="SettingsViewController" customModule="wallpapers" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qbe-wD-rec">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ctI-PP-1Tf">
+                                <rect key="frame" x="17" y="176" width="342" height="460"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settings3.png" translatesAutoresizingMaskIntoConstraints="NO" id="LKn-qJ-4FY">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="251"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GMI-5t-Cx5">
+                                        <rect key="frame" x="51" y="258" width="240" height="52"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="removeads2.png">
+                                            <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="removeAdsButtonTapped:" destination="Maj-EF-7oI" eventType="touchUpInside" id="IdZ-kp-Cof"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3kC-xb-faU">
+                                        <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="48" id="Q61-Yy-WDh"/>
+                                            <constraint firstAttribute="width" constant="48" id="jki-c9-lVi"/>
+                                        </constraints>
+                                        <state key="normal" image="close2.png">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closePopup:" destination="Maj-EF-7oI" eventType="touchUpInside" id="vgU-Sr-Qon"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jYm-x9-akT">
+                                        <rect key="frame" x="75" y="325" width="192" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14.5"/>
+                                        <state key="normal" title="RESTORE PURCHASE">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="restorePurchases:" destination="Maj-EF-7oI" eventType="touchUpInside" id="EA5-of-bLw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tap-Yc-YHT">
+                                        <rect key="frame" x="75" y="365" width="192" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14.5"/>
+                                        <state key="normal" title="SHARE WITH A FRIEND">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="shareButtonTapped:" destination="Maj-EF-7oI" eventType="touchUpInside" id="5QK-fQ-o53"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Cq-aP-ivK">
+                                        <rect key="frame" x="75" y="405" width="192" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14.5"/>
+                                        <state key="normal" title="RATE US!">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="rateButtonTapped:" destination="Maj-EF-7oI" eventType="touchUpInside" id="qGo-QD-IBZ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="3kC-xb-faU" firstAttribute="top" secondItem="LKn-qJ-4FY" secondAttribute="top" id="38E-aM-7yl"/>
+                                    <constraint firstItem="LKn-qJ-4FY" firstAttribute="top" secondItem="ctI-PP-1Tf" secondAttribute="top" id="D9l-2V-mH0"/>
+                                    <constraint firstAttribute="height" constant="460" id="GsW-DZ-cpZ"/>
+                                    <constraint firstItem="3kC-xb-faU" firstAttribute="leading" secondItem="LKn-qJ-4FY" secondAttribute="leading" id="YkS-i1-3ic"/>
+                                    <constraint firstAttribute="bottom" secondItem="LKn-qJ-4FY" secondAttribute="bottom" constant="209" id="aYQ-eW-1Kb"/>
+                                    <constraint firstItem="LKn-qJ-4FY" firstAttribute="leading" secondItem="ctI-PP-1Tf" secondAttribute="leading" id="jrv-A0-2X1"/>
+                                    <constraint firstAttribute="trailing" secondItem="LKn-qJ-4FY" secondAttribute="trailing" id="rUo-3V-mJD"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.92000000000000004" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="ctI-PP-1Tf" firstAttribute="leading" secondItem="lS1-cf-sVk" secondAttribute="leading" constant="17" id="m6S-A0-5Na"/>
+                            <constraint firstItem="ctI-PP-1Tf" firstAttribute="centerX" secondItem="Qbe-wD-rec" secondAttribute="centerX" id="t9N-hj-TcI"/>
+                            <constraint firstItem="ctI-PP-1Tf" firstAttribute="centerY" secondItem="Qbe-wD-rec" secondAttribute="centerY" id="zao-Rx-Sfx"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="lS1-cf-sVk"/>
+                    </view>
+                    <connections>
+                        <outlet property="bkgView" destination="ctI-PP-1Tf" id="28M-ei-u6h"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tpL-Ue-zND" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2485.5999999999999" y="1391.3793103448277"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Screenshot1.6.jpg" width="1242" height="2208"/>
         <image name="button1.1.png" width="430" height="93"/>
         <image name="button3.png" width="430" height="93"/>
         <image name="close2.png" width="150" height="150"/>
-        <image name="removeads2.1.png" width="430" height="93"/>
+        <image name="removeads2.png" width="430" height="93"/>
+        <image name="settings3.png" width="626" height="626"/>
     </resources>
 </document>
