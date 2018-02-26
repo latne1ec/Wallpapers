@@ -12,6 +12,8 @@ import GoogleMobileAds
 import SwiftyStoreKit
 import StoreKit
 import OneSignal
+import GSTouchesShowingWindow_Swift
+import Flurry_iOS_SDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +23,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return _instance
     }
 
-    var window: UIWindow?
+//    var window: UIWindow?
+    var customWindow: GSTouchesShowingWindow?
+    var window: UIWindow? {
+        get {
+            customWindow = customWindow ?? GSTouchesShowingWindow(frame: UIScreen.main.bounds)
+            return customWindow
+        }
+        set { }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -33,11 +43,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         PFUser.enableAutomaticUser()
         PFUser.current()?.incrementKey("runCount")
+        if UIDevice().userInterfaceIdiom == .phone {
+            switch UIScreen.main.nativeBounds.height {
+            case 2436:
+                PFUser.current()?.setObject(true, forKey: "iPhoneX")
+            default:
+                break
+            }
+        }
         PFUser.current()?.saveInBackground()
         
         AdManager.Instance.detectIfMonetizationEnabled()
         ALSdk.initializeSdk()
-        AdManager.Instance.preloadInterstitial()
+        //AdManager.Instance.preloadInterstitial()
         AdManager.Instance.shouldShowAd = false
         
         // One Signal Push Notifications
@@ -61,15 +79,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        let query = PFQuery(className: "Categories")
-        query.findObjectsInBackground { (objects, error) in
-            if let categories = objects {
-                CategoryManager.Instance.categories.removeAll()
-                for category in categories {
-                    CategoryManager.Instance.categories.append(category["categoryName"] as! String)
-                }
-            }
-        }
+        
+        /// FLURRY
+        
+        Flurry.startSession("3HDVG4JD5PK9X47BVBB4", with: FlurrySessionBuilder
+            .init()
+            .withCrashReporting(true)
+            .withLogLevel(FlurryLogLevelAll))
+        
+        
+        
+        //User.Instance.checkIfPremiumMembership()
         
         return true
     }

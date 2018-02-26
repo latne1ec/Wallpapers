@@ -19,3 +19,41 @@ let storeProductVC = SKStoreProductViewController()
 storeProductVC.delegate = self
 storeProductVC.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : NSNumber(value: 1306304549)])
 self.present(storeProductVC, animated: true, completion: nil)
+
+
+//  SHOWINTERSTIAIAL???
+//        if AdManager.Instance.counter < 2 {
+//            AdManager.Instance.counter+=1
+//        } else if AdManager.Instance.counter == 2 {
+//            AdManager.Instance.counter = 0
+//            if AdManager.Instance.interstitial.isReady {
+//                AdManager.Instance.showAdmobInterstitial(fromVC: self)
+//            } else if ALInterstitialAd.isReadyForDisplay() {
+//                AdManager.Instance.showApplovinAd()
+//            } else {
+//                // No Ad
+//            }
+//        }
+
+let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+if userIsProMember == true {
+} else {
+if PFUser.current() != nil {
+/// && PFUser.current()?.object(forKey: "runCount") as! Int > 1
+//self.perform(#selector(showPro), with: nil, afterDelay: 0.75)
+}
+}
+
+//registerForPreviewing(with: self, sourceView: view)
+
+
+// Dynamic Categories
+//        let query = PFQuery(className: "Categories")
+//        query.findObjectsInBackground { (objects, error) in
+//            if let categories = objects {
+//                CategoryManager.Instance.categories.removeAll()
+//                for category in categories {
+//                    CategoryManager.Instance.categories.append(category["categoryName"] as! String)
+//                }
+//            }
+//        }

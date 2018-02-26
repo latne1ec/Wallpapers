@@ -8,7 +8,6 @@
 
 import UIKit
 import GoogleMobileAds
-import PopupDialog
 import Parse
 
 public struct GSImageInfo {
@@ -91,6 +90,7 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     var statusBarHidden: Bool?
     var downloadButton = UIButton()
     var interstitial: GADInterstitial!
+    var currentPhotoObject: PFObject?
     
     fileprivate let imageView  = UIImageView()
     fileprivate let scrollView = UIScrollView()
@@ -150,23 +150,24 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         
         self.perform(#selector(showInterstitial), with: nil, afterDelay: 0.1)
         
+//        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
+//        let userIsPremiumMember = UserDefaults.standard.bool(forKey: "premiumMembership")
+//        if userIsProMember == true {
+//        } else if userIsPremiumMember == true {
+//        } else {
+//            self.perform(#selector(showPremiumPopup), with: nil, afterDelay: 0.1)
+//        }
+    }
+    
+    @objc func showPremiumPopup () {
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "PremiumPopup2") as! PopupViewController
+        popupVC.popupImage = imageView.image
+        popupVC.parentVC = self
+        present(popupVC, animated: true, completion: nil)
     }
     
     @objc func showInterstitial () {
-        
-//
-//        if AdManager.Instance.counter < 2 {
-//            AdManager.Instance.counter+=1
-//        } else if AdManager.Instance.counter == 2 {
-//            AdManager.Instance.counter = 0
-//            if AdManager.Instance.interstitial.isReady {
-//                AdManager.Instance.showAdmobInterstitial(fromVC: self)
-//            } else if ALInterstitialAd.isReadyForDisplay() {
-//                AdManager.Instance.showApplovinAd()
-//            } else {
-//                // No Ad
-//            }
-//        }
         
         if AdManager.Instance.monetizationEnabled == false {
             return
@@ -225,7 +226,14 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc func userRequestToSaveImage () {
-        saveImage()
+        showPremiumPopup()
+//        saveImage()
+//        currentPhotoObject?.setObject(false, forKey: "isVisible")
+//        currentPhotoObject?.saveInBackground(block: { (success, error) in
+//            if success {
+//                print("deleted")
+//            }
+//        })
     }
     
     @objc func lowerAlpha () {
@@ -243,7 +251,8 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return }
         UIGraphicsEndImageContext()
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-
+        currentPhotoObject?.incrementKey("downloadCount")
+        currentPhotoObject?.saveInBackground()
     }
     
     func showPopup () {
@@ -264,16 +273,24 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
             present(ac, animated: true)
             heightenAlpha()
         } else {
-            let ac = UIAlertController(title: "Saved Wallpaper!", message: "Your wallpaper has been saved to your Photos app for use.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
-                UIAlertAction in
-                ReviewController.Instance.requestReview()
-            }
-            //ac.addAction(UIAlertAction(title: "OK", style: .default))
-            ac.addAction(okAction)
-            present(ac, animated: true)
+//            let ac = UIAlertController(title: "Saved Wallpaper!", message: "Your wallpaper has been saved to your Photos app for use.", preferredStyle: .alert)
+//            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+//                UIAlertAction in
+//                ReviewController.Instance.requestReview()
+//            }
+//            ac.addAction(okAction)
+//            present(ac, animated: true)
+            
+            // Toast with a specific duration and position
+            self.view.makeToast("Saved Wallpaper to Photos app!", duration: 15.0, position: .center)
+            //self.perform(#selector(askForReview), with: nil, afterDelay: 0.5)
+            
             heightenAlpha()
         }
+    }
+    
+    @objc func askForReview () {
+        ReviewController.Instance.requestReview()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -282,6 +299,8 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         } else {
             UIApplication.shared.setStatusBarHidden(false, with: UIStatusBarAnimation.fade)
         }
+        
+        currentPhotoObject = nil
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -292,9 +311,11 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
         super.viewWillLayoutSubviews()
         
         imageView.frame = imageInfo.calculateRect(view.bounds.size)
-        
+        imageView.center = view.center
+        //imageView.frame = view.frame
+        //imageView.contentMode = .scaleAspectFit
         scrollView.frame = view.bounds
-        scrollView.contentSize = imageView.bounds.size
+        //scrollView.contentSize = imageView.bounds.size
         //scrollView.maximumZoomScale = imageInfo.calculateMaximumZoomScale(scrollView.bounds.size)
     }
     
@@ -315,11 +336,11 @@ open class DetailViewController: UIViewController, UIImagePickerControllerDelega
     fileprivate func setupImageView() {
         imageView.backgroundColor = UIColor.black
         imageView.image = imageInfo.image
-        imageView.contentMode = .scaleAspectFit
+        //imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
         scrollView.addSubview(imageView)
-        //scrollView.layer.cornerRadius = 10
+        scrollView.layer.cornerRadius = 10
     }
     
     fileprivate func setupGesture() {

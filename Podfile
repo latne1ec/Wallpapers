@@ -10,12 +10,13 @@ target 'wallpapers' do
   pod 'Parse'
   pod 'SDWebImage', '~> 4.0'
   pod 'Google-Mobile-Ads-SDK'
-  pod 'PopupDialog', '~> 0.6'
   pod 'NVActivityIndicatorView'
   pod 'GoogleMobileAdsMediationAppLovin'
   pod 'SwiftyStoreKit'
   pod 'PickerView'
+  pod 'GSTouchesShowingWindow-Swift'
   pod 'OneSignal', '>= 2.5.2', '< 3.0'
+  pod 'Flurry-iOS-SDK/FlurrySDK' 
 
 end
 

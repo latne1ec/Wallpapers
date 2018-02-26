@@ -38,6 +38,7 @@ class AdManager: NSObject, GADInterstitialDelegate, ALAdDisplayDelegate, ALAdVid
 //            self.monetizationEnabled = config?["monetizationEnabled"] as? Bool
 //            if self.monetizationEnabled == true {
 //                self.delegate?.enableBanner()
+//                self.preloadInterstitial()
 //            }
 //        }
         self.monetizationEnabled = false

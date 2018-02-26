@@ -51,6 +51,9 @@ class PopupViewController: UIViewController {
     var userFinishedVideo: Bool = false
     var interstitial: GADInterstitial!
     
+    @IBOutlet weak var premiumContentLabel: UILabel!
+    
+    @IBOutlet weak var premiumContentRectangle: UILabel!
     @IBOutlet weak var fourLabel: UILabel!
     
     override func viewDidLoad() {
@@ -61,18 +64,46 @@ class PopupViewController: UIViewController {
         self.bkgView.backgroundColor = UIColor.white
         self.popupImageView.image = popupImage
         self.popupImageView.clipsToBounds = true
+        
+        if premiumContentLabel != nil {
+            premiumContentLabel.layer.shadowColor = UIColor.black.cgColor
+            premiumContentLabel.layer.shadowOpacity = 1.0
+            premiumContentLabel.layer.shadowRadius = 12.0
+            premiumContentLabel.layer.shadowOffset = CGSize(width: 0, height: 0)
+        }
+        
+        if premiumContentRectangle != nil {
+            premiumContentRectangle.layer.cornerRadius = 5
+            premiumContentRectangle.layer.shadowColor = UIColor.black.cgColor
+            premiumContentRectangle.layer.shadowOpacity = 0.50
+            premiumContentRectangle.layer.shadowRadius = 2.0
+            premiumContentRectangle.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+            premiumContentRectangle.clipsToBounds = true
+            //premiumContentRectangle.layer.masksToBounds = true
+        }
     
     }
 
     @IBAction func closePopup(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-        parentVC?.heightenAlpha()
-        PushManager.Instance.askUserToAllowNotifications()
+        let ac = UIAlertController(title: "Are you sure?", message: "The 3 day trial is 100% FREE plus you can cancel your subscription at anytime at no charge.", preferredStyle: .alert)
+        let action1 = UIAlertAction(title: "Later", style: .default, handler: { (alert) in
+            self.dismiss(animated: true, completion: nil)
+            self.parentVC?.heightenAlpha()
+            self.parentVC?.dismiss(animated: true, completion: nil)
+        })
+        let action2 = UIAlertAction(title: "Try FREE", style: .default, handler: { (alert) in
+            // Make Subscription Purchase
+            self.purchaseSubscription()
+        })
+        ac.addAction(action1)
+        ac.addAction(action2)
+        self.present(ac, animated: true, completion: nil)
     }
     
     @IBAction func buttonOneTapped(_ sender: Any) {
-        // START SUBSCRIPTION
-        purchase(purchase: RegisteredPurchase.ProMembership)
+        // Old
+        //purchase(purchase: RegisteredPurchase.ProMembership)
+        purchaseSubscription()
     }
     
     @IBAction func buttonTwoTapped(_ sender: Any) {
@@ -112,13 +143,42 @@ class PopupViewController: UIViewController {
     }
     
     @IBAction func helpTapped(_ sender: UIButton) {
-        print("hi")
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let popupVC = storyboard.instantiateViewController(withIdentifier: "Help")
         present(popupVC, animated: true, completion: nil)
         
     }
     
+    // New Subscriptions
+    
+    func purchaseSubscription () {
+        let loader = LoadingView()
+        loader.frame = view.frame
+        self.view.addSubview(loader)
+        loader.show()
+        let productId = "com.teamlevellabs.hdwallpapers.premiummembership"
+        SwiftyStoreKit.purchaseProduct(productId, atomically: true) { result in
+            
+            if case .success(let purchase) = result {
+                // Deliver content from server, then:
+                if purchase.needsFinishTransaction {
+                    SwiftyStoreKit.finishTransaction(purchase.transaction)
+                }
+                print("Purchased")
+                User.Instance.setUserAsPremiumMembershipWeekly()
+                self.homeVC?.removeBanner()
+                self.parentVC?.dismiss(animated: true, completion: nil)
+            } else {
+                // purchase error
+            }
+            loader.dismiss()
+            loader.removeFromSuperview()
+        }
+    }
+    
+    
+    
+    // OLD
     func purchase (purchase: RegisteredPurchase) {
         let loader = LoadingView()
         loader.frame = view.frame

@@ -44,10 +44,13 @@ class CategoryViewController: UIViewController, PickerViewDelegate, PickerViewDa
     }
     
     func pickerView(_ pickerView: PickerView, didSelectRow row: Int) {
+//        let generator = UIImpactFeedbackGenerator(style: .light)
+//        generator.impactOccurred()
     }
     
     func pickerView(_ pickerView: PickerView, didTapRow row: Int, index: Int) {
-        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
     
     func pickerView(_ pickerView: PickerView, styleForLabel label: UILabel, highlighted: Bool) {

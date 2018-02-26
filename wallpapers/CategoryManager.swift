@@ -18,7 +18,8 @@ class CategoryManager: NSObject {
     static var Instance: CategoryManager {
         return _instance
     }
-    var categories = ["NEW","ARCHITECTURE","ART","CITY","FLOWERS","NATURE","OCEAN","SKY","TRAVEL"]
+    var categories = ["NEW","ABSTRACT","ANIMAL","ART","CITY","FLOWERS","MODELS",
+                      "NATURE","OCEAN","QUOTES","SKY","TRAVEL"]
     
     var delegate: CategoryManagerDelegate?
     

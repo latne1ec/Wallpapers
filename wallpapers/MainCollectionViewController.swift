@@ -52,16 +52,6 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         CategoryManager.Instance.delegate = self
         pullingToRefresh = false
         
-        let userIsProMember = UserDefaults.standard.bool(forKey: "promember")
-        if userIsProMember == true {
-        } else {
-            if PFUser.current() != nil {
-                /// && PFUser.current()?.object(forKey: "runCount") as! Int > 1
-                //self.perform(#selector(showPro), with: nil, afterDelay: 0.75)
-            }
-        }
-        
-        //registerForPreviewing(with: self, sourceView: view)
     }
     
     @objc func showPro () {
@@ -85,7 +75,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                 categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
             case "CITY":
                 categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12.5)
-            case "FLOWERS":
+            case "FLOWERS","ABSTRACT":
                 categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11.5)
             case "NATURE", "OCEAN", "SPACE", "TRAVEL":
                 categoryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
@@ -99,7 +89,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     
     override func viewDidAppear(_ animated: Bool) {
         checkInternetConnection()
-        print(PushManager.Instance)
+        PushManager.Instance.askUserToAllowNotifications()
     }
     
     func checkInternetConnection () {
@@ -167,10 +157,11 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         self.view.bringSubview(toFront: settingsButton)
         settingsButton.addBounce()
         
-        removeAdsButton.setImage(UIImage(named: "noads"), for: .normal)
-        removeAdsButton.imageView?.contentMode = .scaleAspectFit
-        removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 10)
-        //removeAdsButton.setTitleColor(UIColor.darkText, for: .normal)
+//        removeAdsButton.setImage(UIImage(named: "noads2"), for: .normal)
+//        removeAdsButton.imageView?.contentMode = .scaleAspectFit
+        removeAdsButton.setTitle("PRO", for: .normal)
+        removeAdsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
+        removeAdsButton.setTitleColor(UIColor(white:0.13, alpha:1.0), for: .normal)
         removeAdsButton.backgroundColor = UIColor.white
         removeAdsButton.layer.cornerRadius = 26
         removeAdsButton.frame = CGRect(x: width/2+55, y: height-110, width: 54, height: 54)
@@ -179,10 +170,10 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         removeAdsButton.layer.shadowRadius = 8.0
         removeAdsButton.addBorder()
         removeAdsButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        //removeAdsButton.addTarget(self, action: #selector(makePurchase), for: .touchUpInside)
         removeAdsButton.addTarget(self, action: #selector(makePurchase), for: .touchUpInside)
         removeAdsButton.addTarget(self, action: #selector(lowerAlpha), for: .touchDown)
         removeAdsButton.addTarget(self, action: #selector(heightenAlpha), for: .touchDragExit)
-        //removeAdsButton.addRedDot()
         self.view.addSubview(removeAdsButton)
         self.view.bringSubview(toFront: removeAdsButton)
         removeAdsButton.addBounce()
@@ -237,7 +228,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
     @objc func rateButtonTapped (sender: UIButton) {
         sender.alpha = 1.0
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let popupVC = storyboard.instantiateViewController(withIdentifier: "Settings") as! SettingsViewController
+        let popupVC = storyboard.instantiateViewController(withIdentifier: "Settings2") as! SettingsViewController
         present(popupVC, animated: true, completion: nil)
     }
     
@@ -319,22 +310,25 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
             let imageFile = object["contentFile"] as! PFFile
             let imageUrl = imageFile.url
             let url = URL(string: imageUrl!)
-            cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
-                // Perform operation.
-                cell.imageView.alpha = 0
-                if let spin = cell.viewWithTag(99) {
-                    let spinner = spin as! NVActivityIndicatorView
-                    spinner.stopAnimating()
-                    spinner.removeFromSuperview()
-                    spinner.isHidden = true
-                    UIView.animate(withDuration: 0.15, animations: {
+            DispatchQueue.global(qos: .background).async {
+
+                cell.imageView.sd_setImage(with: url!, placeholderImage: nil,options: [.continueInBackground], completed: { (image, error, cacheType, imageURL) in
+                    // Perform operation.
+                    cell.imageView.alpha = 0
+                    if let spin = cell.viewWithTag(99) {
+                        let spinner = spin as! NVActivityIndicatorView
                         spinner.stopAnimating()
                         spinner.removeFromSuperview()
                         spinner.isHidden = true
-                    })
-                }
-                cell.imageView.alpha = 1
-            })
+                        UIView.animate(withDuration: 0.15, animations: {
+                            spinner.stopAnimating()
+                            spinner.removeFromSuperview()
+                            spinner.isHidden = true
+                        })
+                    }
+                    cell.imageView.alpha = 1
+                })
+            }
         
             cell.imageView.layer.cornerRadius = 6
             cell.imageView.layer.masksToBounds = true
@@ -351,6 +345,8 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
         let imageInfo   = GSImageInfo(image: cell.imageView.image!, imageMode: .aspectFill)
         let transitionInfo = GSTransitionInfo(fromView:(cell.imageView))
         let imageViewer = DetailViewController(imageInfo: imageInfo, transitionInfo: transitionInfo)
+        let object = self.localContentArray[indexPath.row] as? PFObject
+        imageViewer.currentPhotoObject = object
         present(imageViewer, animated: true, completion: nil)
         
     }
@@ -441,7 +437,7 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                     }
                 }
                 self.collectionView?.reloadData()
-                self.downloadAllImages()
+                //self.downloadAllImages()
                 if self.localContentArray.count == 0 {
                     return
                 }
@@ -482,6 +478,34 @@ class MainCollectionViewController: UICollectionViewController, UICollectionView
                                           at: .top,
                                           animated: true)
     }
+    
+    // New Subscriptions
+    
+    @objc func purchaseSubscription () {
+        removeAdsButton.alpha = 1.0
+        let loader = LoadingView()
+        loader.frame = view.frame
+        self.view.addSubview(loader)
+        loader.show()
+        let productId = "com.teamlevellabs.hdwallpapers.premiummembership"
+        SwiftyStoreKit.purchaseProduct(productId, atomically: true) { result in
+            
+            if case .success(let purchase) = result {
+                // Deliver content from server, then:
+                if purchase.needsFinishTransaction {
+                    SwiftyStoreKit.finishTransaction(purchase.transaction)
+                }
+                print("Purchased")
+                User.Instance.setUserAsPremiumMembershipWeekly()
+                self.removeBanner()
+            } else {
+                // purchase error
+            }
+            loader.dismiss()
+            loader.removeFromSuperview()
+        }
+    }
+    
     
     @objc func makePurchase (sender: UIButton) {
         sender.alpha = 1.0

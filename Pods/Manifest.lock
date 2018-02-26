@@ -1,11 +1,13 @@
 PODS:
   - AppLovinSDK (4.3.1)
   - Bolts/Tasks (1.8.4)
+  - Flurry-iOS-SDK/FlurrySDK (8.3.4)
   - Google-Mobile-Ads-SDK (7.24.1)
   - GoogleMobileAdsMediationAppLovin (4.3.1.0):
     - AppLovinSDK (= 4.3.1)
     - Google-Mobile-Ads-SDK (>= 7.14.0)
   - GSImageViewerController (1.4.0)
+  - GSTouchesShowingWindow-Swift (1.0.3)
   - NVActivityIndicatorView (4.0.0):
     - NVActivityIndicatorView/Presenter (= 4.0.0)
   - NVActivityIndicatorView/Presenter (4.0.0)
@@ -13,38 +15,39 @@ PODS:
   - Parse (1.15.3):
     - Bolts/Tasks (~> 1.8)
   - PickerView (0.3.3)
-  - PopupDialog (0.6.0)
   - SDWebImage (4.1.1):
     - SDWebImage/Core (= 4.1.1)
   - SDWebImage/Core (4.1.1)
   - SwiftyStoreKit (0.10.8)
 
 DEPENDENCIES:
+  - Flurry-iOS-SDK/FlurrySDK
   - Google-Mobile-Ads-SDK
   - GoogleMobileAdsMediationAppLovin
   - GSImageViewerController
+  - GSTouchesShowingWindow-Swift
   - NVActivityIndicatorView
   - OneSignal (< 3.0, >= 2.5.2)
   - Parse
   - PickerView
-  - PopupDialog (~> 0.6)
   - SDWebImage (~> 4.0)
   - SwiftyStoreKit
 
 SPEC CHECKSUMS:
   AppLovinSDK: 485b91ee21c189bb2dffc3234c9e79d65d816a10
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  Flurry-iOS-SDK: eed8399800cf16fe7e0121831150a7957297df99
   Google-Mobile-Ads-SDK: ed8004a7265b424568dc84f3d2bbe3ea3fff958f
   GoogleMobileAdsMediationAppLovin: 80dd55f6d6905ed09a807b69c9970aa4c6fc7062
   GSImageViewerController: 75df64f6b7279e7ec19b1daf5fd01b1ca784055d
+  GSTouchesShowingWindow-Swift: 445376c1c5b105996458498adcfde9019be6fa27
   NVActivityIndicatorView: 54c9b93b6f25a4f467512680c0c90c09a1095cf2
   OneSignal: 9ec286d9156b86b3975f45d928e70f46c74ef4b7
   Parse: cdc0f1f975ee8be0409e66f21b05df4ae067047c
   PickerView: a6703d2f7cb1fafc8a3aef4af255a5acd320ddff
-  PopupDialog: 687af43af0f7b89948cd411ac701865f931bd6dc
   SDWebImage: caf91ee75671c95eb7b3073cd90649d25f852a88
   SwiftyStoreKit: 8c193678fabbaafb4430a536497613f89fefd7ec
 
-PODFILE CHECKSUM: 9444d7ab1f8fcfcc802e21fd580ff37f193322f6
+PODFILE CHECKSUM: 5d849e99164aa302f3d580391aa71aebb216aa2d
 
 COCOAPODS: 1.2.0
